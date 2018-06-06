@@ -6,12 +6,12 @@
 
 <script>
 export default {
-  name: 'app'
-}
+  name: "app"
+};
 </script>
 
 <style lang="less">
-@import '~vux/src/assets//less/app.less';
+@import "./assets/less/app.less";
 
 body {
   background-color: #fbf9fe;
