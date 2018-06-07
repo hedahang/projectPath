@@ -12,8 +12,8 @@ export default {
 
 <style lang="less">
 @import "./assets/less/app.less";
-
+html,
 body {
-  background-color: #fbf9fe;
+  background-color: #f5f6f7;
 }
 </style>

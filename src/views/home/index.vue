@@ -27,6 +27,37 @@
         <span slot="label">美妆</span>
       </grid-item>
     </grid>
+    <!-- 商品列表 -->
+    <div class="goods-list">
+        <a class="goods-list-item">
+            <div class="item-lf">
+                <img src="http://ofjo26fgy.bkt.clouddn.com/21d87e11b15046bfb4a6f73af2c3b80e.jpg" alt="">
+            </div>
+            <div class="item-rt">
+                <h4 class="item-rt_title">薯片</h4>
+                <p class="item-rt_desc">非常棒的薯片</p>
+                <p class="item-rt_sales">月销售2000份</p>
+                <div class="item_rt_footer">
+                    <span class='price'>￥8</span>
+                    <div class="inline-number"></div>
+                </div>
+            </div>
+        </a>
+        <a class="goods-list-item">
+            <div class="item-lf">
+                <img src="http://ofjo26fgy.bkt.clouddn.com/21d87e11b15046bfb4a6f73af2c3b80e.jpg" alt="">
+            </div>
+            <div class="item-rt">
+                <h4 class="item-rt_title">薯片</h4>
+                <p class="item-rt_desc">非常棒的薯片</p>
+                <p class="item-rt_sales">月销售2000份</p>
+                <div class="item_rt_footer">
+                    <span class='price'>￥8</span>
+                    <div class="inline-number"></div>
+                </div>
+            </div>
+        </a>
+    </div>
   </div>
 </template>
 
@@ -110,10 +141,10 @@ export default {
     }
   }
   .weui-grids {
-    background-color: #FFF;
+    background-color: #fff;
     .weui-grid {
       padding: 10px;
-      &:after{
+      &:after {
         display: none;
       }
       .weui-grid__icon {
@@ -123,6 +154,83 @@ export default {
       .weui-grid__label {
         font-size: 12px;
         color: #666;
+      }
+    }
+  }
+  .goods-list {
+    margin-top: 7px;
+    background-color: #fff;
+    .goods-list-item {
+      display: flex;
+      align-items: center;
+      padding: 10px 20px;
+      position: relative;
+      &:before {
+        content: " ";
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        height: 1px;
+        border-top: 1px solid #e0e0e0;
+        color: #e5e5e5;
+        transform-origin: 0 0;
+        transform: scaleY(0.5);
+        left: 15px;
+      }
+      &:first-child:before {
+        display: none;
+      }
+      .item-lf {
+        margin-right: 0.8em;
+        width: 80px;
+        height: 80px;
+        line-height: 80px;
+        text-align: center;
+        img {
+          width: 100%;
+          max-height: 100%;
+          vertical-align: top;
+        }
+      }
+      .item-rt {
+        -webkit-box-flex: 1;
+        -webkit-flex: 1;
+        flex: 1;
+        min-width: 0;
+        .item-rt_title,
+        .item-rt_desc,
+        .item-rt_sales {
+          font-weight: 400;
+          font-size: 15px;
+          color: #333333;
+          width: auto;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          word-wrap: normal;
+          word-wrap: break-word;
+          word-break: break-all;
+        }
+        .item-rt_desc {
+          margin: 4px 0;
+          color: #999999;
+          font-size: 12px;
+          font-weight: normal;
+        }
+        .item-rt_sales {
+          color: #666666;
+          font-weight: normal;
+          margin: 4px 0;
+          font-size: 12px;
+        }
+        .item_rt_footer {
+          .price {
+            color: #ff5151;
+            font-size: 15px;
+            font-weight: bold;
+          }
+        }
       }
     }
   }
