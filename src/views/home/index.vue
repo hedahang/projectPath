@@ -29,35 +29,24 @@
     </grid>
     <!-- 商品列表 -->
     <div class="goods-list">
-        <a class="goods-list-item">
+        <a v-for="(item,index) in goodsList" :key='index' class="goods-list-item">
             <div class="item-lf">
-                <img src="http://ofjo26fgy.bkt.clouddn.com/21d87e11b15046bfb4a6f73af2c3b80e.jpg" alt="">
+                <img :src="item.img" alt="">
             </div>
             <div class="item-rt">
-                <h4 class="item-rt_title">薯片</h4>
-                <p class="item-rt_desc">非常棒的薯片</p>
-                <p class="item-rt_sales">月销售2000份</p>
+                <h4 class="item-rt_title">{{item.title}}</h4>
+                <p class="item-rt_desc">{{item.desc}}</p>
+                <p class="item-rt_sales">月销售{{item.sales}}份</p>
                 <div class="item_rt_footer">
-                    <span class='price'>￥8</span>
-                    <div class="inline-number"></div>
-                </div>
-            </div>
-        </a>
-        <a class="goods-list-item">
-            <div class="item-lf">
-                <img src="http://ofjo26fgy.bkt.clouddn.com/21d87e11b15046bfb4a6f73af2c3b80e.jpg" alt="">
-            </div>
-            <div class="item-rt">
-                <h4 class="item-rt_title">薯片</h4>
-                <p class="item-rt_desc">非常棒的薯片</p>
-                <p class="item-rt_sales">月销售2000份</p>
-                <div class="item_rt_footer">
-                    <span class='price'>￥8</span>
-                    <div class="inline-number"></div>
+                    <span class='price'>￥{{item.price}}</span>
+                    <div class="item_rt_footer_number">
+                      <inlineNumber :item="item"></inlineNumber>
+                    </div>
                 </div>
             </div>
         </a>
     </div>
+    <!-- 底部导航栏 -->
   </div>
 </template>
 
@@ -74,6 +63,7 @@ import {
   ButtonTabItem,
   XHeader
 } from "vux";
+import inlineNumber from "@/components/inline-number/index";
 import iconSearch from "@/assets/images/home_icon_search@2x.png";
 export default {
   name: "home",
@@ -96,6 +86,53 @@ export default {
           img:
             "https://ww1.sinaimg.cn/large/663d3650gy1fq66vvsr72j20p00gogo2.jpg" // 404
         }
+      ],
+      goodsList: [
+        {
+          img:
+            "http://ofjo26fgy.bkt.clouddn.com/21d87e11b15046bfb4a6f73af2c3b80e.jpg",
+          title: "薯片",
+          desc: "非常棒的薯片",
+          sales: "2000",
+          price: "8",
+          number: 0
+        },
+        {
+          img:
+            "http://ofjo26fgy.bkt.clouddn.com/21d87e11b15046bfb4a6f73af2c3b80e.jpg",
+          title: "薯片",
+          desc: "非常棒的薯片",
+          sales: "2000",
+          price: "8",
+          number: 0
+        },
+        {
+          img:
+            "http://ofjo26fgy.bkt.clouddn.com/21d87e11b15046bfb4a6f73af2c3b80e.jpg",
+          title: "薯片",
+          desc: "非常棒的薯片",
+          sales: "2000",
+          price: "8",
+          number: 0
+        },
+        {
+          img:
+            "http://ofjo26fgy.bkt.clouddn.com/21d87e11b15046bfb4a6f73af2c3b80e.jpg",
+          title: "薯片",
+          desc: "非常棒的薯片",
+          sales: "2000",
+          price: "8",
+          number: 0
+        },
+        {
+          img:
+            "http://ofjo26fgy.bkt.clouddn.com/21d87e11b15046bfb4a6f73af2c3b80e.jpg",
+          title: "薯片",
+          desc: "非常棒的薯片",
+          sales: "2000",
+          price: "8",
+          number: 0
+        }
       ]
     };
   },
@@ -109,7 +146,8 @@ export default {
     SwiperItem,
     Grid,
     GridItem,
-    GroupTitle
+    GroupTitle,
+    inlineNumber
   },
   methods: {
     onItemClick() {
@@ -126,7 +164,13 @@ export default {
 
 <style rel="stylesheet/less" lang="less">
 .home {
+  padding:46px 0 50px;
   .home-header {
+    position: fixed;
+    width: 100%;
+    left: 0;
+    top: 0;
+    z-index: 100;
     .overwrite-title-demo {
       margin-top: 7.5px;
       .weui-cells {
@@ -225,6 +269,9 @@ export default {
           font-size: 12px;
         }
         .item_rt_footer {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
           .price {
             color: #ff5151;
             font-size: 15px;
