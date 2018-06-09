@@ -1,32 +1,22 @@
 @import "./basestyle.less";
 .container {
-	// max-width: @max-width;
-    // min-width: @min-width;
-    width: 100%;
-	margin: 0 auto;
+  // max-width: @max-width;
+  // min-width: @min-width;
+  width: 100%;
+  margin: 0 auto;
 }
-.ui {
-	display: flex;
-}
-.ui.start {
-	align-items: flex-start;
-}
-.ui.center {
-	align-items: center;
-}
-.ui.end {
-	align-items: flex-end;
-}
-.ui.jcenter {
-	justify-content: center;
-}
-.ui.jstart {
-	justify-content: flex-start;
-}
-.ui.jend {
-	justify-content: flex-end;
-}
-.ui .f1 {
-	flex: 1;
-	min-width: 0;
+// header导航栏
+.header-bar {
+  position: fixed !important;
+  width: 100%;
+  left: 0;
+  top: 0;
+  z-index: 100;
+  .vux-header-left {
+    .left-arrow:before {
+      border-color: #fff !important;
+      width: 10px !important;
+      height: 10px !important;
+    }
+  }
 }

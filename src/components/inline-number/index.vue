@@ -20,7 +20,7 @@ export default {
   props: {
     item: {
       type: Object,
-      default: {number:0}
+      default: { number: 0 }
     }
   },
   data() {
@@ -35,10 +35,10 @@ export default {
      * @param {Boolean} isAdd 是否增加
      */
     changeQty: function(isAdd) {
-      var num = this.item.number
+      var num = this.item.number;
       if (isAdd && num < config.maxGoodsNum) {
         this.$set(this.item, "number", ++num);
-      } else if (!isAdd && num > 1) {
+      } else if (!isAdd && num > 0) {
         this.$set(this.item, "number", --num);
       }
     }

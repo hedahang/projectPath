@@ -1,7 +1,12 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
+// import HelloWorld from '@/components/HelloWorld'
 import Home from '@/views/home/index'
+import Search from '@/views/search/index'
+import Login from '@/views/login/index'
+import Register from '@/views/register/index'
+import Classify from '@/views/classify/index'
+import Goods from '@/views/goods/detail'
 
 Vue.use(Router)
 
@@ -14,6 +19,26 @@ export default new Router({
       path: '/home',
       component: Home,
       name: 'home',
+    },
+    {
+      path: '/search',
+      component: Search,
+      name: 'search',
+    },
+    {
+      path: '/login',
+      component: Login,
+      name: 'login',
+    },
+    {
+      path: '/classify',
+      component: Classify,
+      name: 'classify',
+    },
+    {
+      path: '/goods',
+      component: Goods,
+      name: 'goods',
     }
   ]
 })

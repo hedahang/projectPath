@@ -1,28 +1,27 @@
 <template>
   <div class="footer">
     <tabbar>
-      <tabbar-item>
-        <img slot="icon" src="../assets/demo/icon_nav_button.png">
-        <span slot="label">Wechat</span>
+      <tabbar-item link="/home" :selected="selected=='home'">
+        <img slot="icon" :src="home">
+        <img slot="icon-active" :src="home_pre">
+        <span slot="label">首页</span>
       </tabbar-item>
-      <tabbar-item show-dot>
-        <img slot="icon" src="../assets/demo/icon_nav_msg.png">
-        <span slot="label">Message</span>
+      <tabbar-item class='footer-sconend' :selected="selected=='pocket'">
+        <img slot="icon" :src="pocket">
+        <img slot="icon-active" :src="pocket_pre">
+        <span slot="label">口袋</span>
       </tabbar-item>
-      <tabbar-item selected link="/component/demo">
-        <img slot="icon" src="../assets/demo/icon_nav_article.png">
-        <span slot="label">Explore</span>
-      </tabbar-item>
-      <tabbar-item badge="2">
-        <img slot="icon" src="../assets/demo/icon_nav_cell.png">
-        <span slot="label">News</span>
+      <tabbar-item link="/component/demo" :selected="selected=='my'">
+        <img slot="icon" :src="my">
+        <img slot="icon-active" :src="my_pre">
+        <span slot="label">我的</span>
       </tabbar-item>
     </tabbar>
   </div>
 </template>
 
 <script>
-import { Tabbar, TabbarItem} from 'vux'
+import { Tabbar, TabbarItem } from "vux";
 import home from "@/assets/images/home_btn_home@2x.png";
 import home_pre from "@/assets/images/home_btn_home_pre@2x.png";
 import my from "@/assets/images/home_btn_my@2x.png";
@@ -31,9 +30,9 @@ import pocket from "@/assets/images/home_btn_pocket@2x.png";
 import pocket_pre from "@/assets/images/home_btn_pocket_pre@2x.png";
 export default {
   props: {
-    item: {
-      type: Object,
-      default: {number:0}
+    selected: {
+      type: String,
+      defalut: "home"
     }
   },
   data() {
@@ -43,55 +42,41 @@ export default {
       my,
       my_pre,
       pocket,
-      pocket_pre,
+      pocket_pre
     };
   },
-  methods: {
-    /**
-     * @method 增减单品数量
-     * @param {Boolean} isAdd 是否增加
-     */
-    changeQty: function(isAdd) {
-      var num = this.item.number
-      if (isAdd && num < config.maxGoodsNum) {
-        this.$set(this.item, "number", ++num);
-      } else if (!isAdd && num > 1) {
-        this.$set(this.item, "number", --num);
-      }
-    }
-  }
+  components: {
+    Tabbar,
+    TabbarItem
+  },
+  methods: {}
 };
 </script>
 
 <style lang="less">
-.inline-number {
-  display: inline-block;
-  .number-selector {
-    float: left;
-    height: 18px;
-    width: 18px;
-    line-height: 18px;
-    border-radius: 9px;
-    overflow: hidden;
-    &.number-selector-plus {
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 49px;
+  .weui-tabbar {
+    background-color: #fcfcfc;
+    .weui-tabbar__icon {
+      width: 20px;
+      height: 22px;
     }
-    img {
-      width: 100%;
-      height: 100%;
-      vertical-align: top;
+    .footer-sconend .weui-tabbar__icon {
+      width: 18px;
     }
-  }
-  .number-input {
-    float: left;
-    height: 18px;
-    line-height: 18px;
-    font-size: 15px;
-    color: #ff5151;
-    -webkit-appearance: none;
-    appearance: none;
-    border: none;
-    text-align: center;
-    border-radius: 1px;
+    .weui-tabbar__label {
+      color: #666;
+    }
+    .weui-bar__item_on {
+      .weui-tabbar__label {
+        color: #ff5151;
+      }
+    }
   }
 }
 </style>
