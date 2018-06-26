@@ -11,34 +11,39 @@ import Goods from '@/views/goods/detail'
 Vue.use(Router)
 
 export default new Router({
-  routes: [{
-      path: '/',
-      redirect: '/home',
-    },
-    {
-      path: '/home',
-      component: Home,
-      name: 'home',
-    },
-    {
-      path: '/search',
-      component: Search,
-      name: 'search',
-    },
-    {
-      path: '/login',
-      component: Login,
-      name: 'login',
-    },
-    {
-      path: '/classify',
-      component: Classify,
-      name: 'classify',
-    },
-    {
-      path: '/goods',
-      component: Goods,
-      name: 'goods',
-    }
-  ]
+    routes: [{
+            path: '/',
+            redirect: '/home',
+        },
+        {
+            path: '/home',
+            component: Home,
+            name: 'home',
+        },
+        {
+            path: '/search',
+            component: Search,
+            name: 'search',
+        },
+        {
+            path: '/login',
+            component: Login,
+            name: 'login',
+        },
+        {
+            path: '/classify',
+            component: Classify,
+            name: 'classify',
+        },
+        {
+            path: '/register',
+            component: Register,
+            name: 'register'
+        },
+        {
+            path: '/goods',
+            component: Goods,
+            name: 'goods',
+        }
+    ]
 })
