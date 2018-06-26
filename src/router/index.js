@@ -7,6 +7,7 @@ import Login from '@/views/login/index'
 import Register from '@/views/register/index'
 import Classify from '@/views/classify/index'
 import Goods from '@/views/goods/detail'
+import SubmitOrder from '@/views/order/submit-order'
 
 Vue.use(Router)
 
@@ -44,6 +45,11 @@ export default new Router({
             path: '/goods',
             component: Goods,
             name: 'goods',
+        },
+        {
+            path: '/submitOrder',
+            component: SubmitOrder,
+            name: 'submit-order',
         }
     ]
 })

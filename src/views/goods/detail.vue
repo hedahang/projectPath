@@ -32,7 +32,7 @@
             </div>
             <div class="shop-price">￥12.9</div>
         </div>
-        <div class="shop-rt">结算</div>
+        <a class="shop-rt" href="#/submitOrder">结算</a>
     </div>
   </div>
 </template>

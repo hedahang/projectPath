@@ -1,6 +1,6 @@
 <template>
   <div class="goods-list">
-        <a v-for="(item,index) in list" :key='index' class="goods-list-item">
+        <a v-for="(item,index) in list" :key='index' class="goods-list-item" href="#/goods">
             <div class="item-lf">
                 <img :src="item.img" alt="">
             </div>
