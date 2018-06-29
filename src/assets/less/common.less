@@ -20,3 +20,26 @@
     }
   }
 }
+// flex 布局
+.ui {
+  display: flex;
+  &.center {
+    align-items: center;
+    justify-content: center;
+  }
+  &.acenter {
+    align-items: center;
+  }
+  &.jcenter {
+    justify-content: center;
+  }
+  &.jbetween {
+    justify-content: space-between;
+  }
+  .f1 {
+    flex: 1;
+  }
+  .fshrink {
+    flex-shrink: 0;
+  }
+}
