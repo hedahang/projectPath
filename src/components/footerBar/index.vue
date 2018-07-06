@@ -6,7 +6,7 @@
         <img slot="icon-active" :src="home_pre">
         <span slot="label">首页</span>
       </tabbar-item>
-      <tabbar-item class='footer-sconend' :selected="selected=='pocket'">
+      <tabbar-item link="/carts" class='footer-sconend' :selected="selected=='pocket'">
         <img slot="icon" :src="pocket">
         <img slot="icon-active" :src="pocket_pre">
         <span slot="label">口袋</span>
