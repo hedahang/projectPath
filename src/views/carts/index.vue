@@ -1,21 +1,35 @@
 <template>
-  <div class="classify container">
+  <div class="carts container">
     <x-header class="home-header header-bar" :left-options="{showBack: false}" :title="pageTitle" style="background-color:#FF5151;">
-      <span style="font-size: 15px;color: #ffffff;" slot="right">编辑</span>
+      <span @click="changeEdit" style="font-size: 15px;color: #ffffff;" slot="right">{{headerRight}}</span>
     </x-header>
     <!-- 商品列表 -->
-    <div class="goods-box" :style="{height:classifyGoodsHeight+'px'}">
+    <div class="goods-box">
         <aside class="goods-lf">
             <ul>
-                <li class="current"><a href="#">薯片</a></li>
-                <li><a href="#">糖果</a></li>
-                <li><a href="#">巧克力</a></li>
-                <li><a href="#">坚果</a></li>
-                <li><a href="#">辣条</a></li>
+                <li v-for="(item,index) in goodsList" :key='index' class="ui center">
+                    <span></span>
+                </li>
             </ul>
         </aside>
         <div class="goods-rt">
             <goodsListC :list="goodsList"></goodsListC>
+        </div>
+    </div>
+    <divider>我是有底线的</divider>
+    <!-- 结算栏 -->
+    <div class="balance ui jbetween">
+        <div class="lf f1 ui acenter">
+            <span class="checkAll checked"></span>
+            <span class="checkAllText">全选</span>
+            <p v-show="!edit" class="total">
+                <span class="totalText">合计:</span>
+                <span class="totalPrice">￥8.00</span>
+            </p>
+        </div>
+        <div class="rt fshrink">
+            <span v-show="!edit" class="toBalance">去结算</span>
+            <span v-show="edit" class="delete">删除</span>
         </div>
     </div>
     <!-- 底部导航栏 -->
@@ -34,18 +48,18 @@ import {
   Group,
   ButtonTab,
   ButtonTabItem,
-  XHeader
+  XHeader,
+  Divider
 } from "vux";
 import footerBar from "@/components/footerBar/index";
 import goodsListC from "@/components/goodsList/index";
-import iconSearch from "@/assets/images/home_btn_search@2x.png";
 export default {
   name: "home",
   data() {
     return {
       pageTitle: "口袋",
-      iconSearch: iconSearch,
-      classifyGoodsHeight: 0,
+      headerRight: "编辑",
+      edit: false,
       goodsList: [
         {
           img:
@@ -134,15 +148,14 @@ export default {
     GridItem,
     GroupTitle,
     footerBar,
+    Divider,
     goodsListC
   },
-  created() {
-    let Cheight = document.documentElement.clientHeight;
-    this.classifyGoodsHeight = Cheight - 96;
-  },
+  created() {},
   methods: {
-    onItemClick() {
-      console.log("123");
+    changeEdit() {
+      this.edit = !this.edit;
+      this.headerRight = this.headerRight == "编辑" ? "完成" : "编辑";
     },
     toSearch() {
       //   console.log("123");
@@ -158,8 +171,8 @@ export default {
 </script>
 
 <style rel="stylesheet/less" lang="less">
-.classify {
-  padding: 46px 0 50px;
+.carts {
+  padding: 46px 0 94px;
   .home-header {
     position: fixed;
     width: 100%;
@@ -173,42 +186,104 @@ export default {
     display: flex;
     background-color: #fff;
     .goods-lf {
-      width: 80px;
+      width: 30px;
       flex-shrink: 0;
-      height: 100%;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
       ul {
         width: 100%;
         height: 100%;
+        margin-top: 7px;
         li {
           width: 100%;
-          height: 40px;
-          line-height: 40px;
-          background-color: #f5f5f5;
-          margin-top: 1px;
-          &:first-child {
-            margin-top: 0;
-          }
-          &.current {
-            background-color: #ffffff;
-          }
-          a {
+          height: 103px;
+          justify-content: flex-end;
+          span {
             display: block;
-            font-size: 15px;
-            color: #999999;
-            text-align: center;
+            width: 18px;
+            height: 18px;
+            box-sizing: border-box;
+            border: 1px solid #bbbbbb;
+            border-radius: 50%;
+            &.checked {
+              border: none;
+              background: url("../../assets/images/pocket_btn_choose@2x.png")
+                no-repeat 0 0;
+              background-size: 100%;
+            }
           }
         }
       }
     }
     .goods-rt {
       flex: 1;
-      height: 100%;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
       .goods-list .goods-list-item {
-        padding: 10px;
+        padding: 10px 20px 10px 10px;
+      }
+    }
+  }
+  .balance {
+    position: fixed;
+    left: 0;
+    bottom: 46px;
+    width: 100%;
+    height: 44px;
+    background-color: #fff;
+    box-shadow: 0 0px 3px #eee;
+    .lf {
+      flex: 1;
+      span.checkAll {
+        display: block;
+        width: 18px;
+        height: 18px;
+        box-sizing: border-box;
+        border: 1px solid #bbbbbb;
+        border-radius: 50%;
+        margin: 0 10px 0 12px;
+        &.checked {
+          border: none;
+          background: url("../../assets/images/pocket_btn_choose@2x.png")
+            no-repeat 0 0;
+          background-size: 100%;
+        }
+      }
+      span.checkAllText {
+        font-size: 12px;
+        color: #999999;
+        margin-right: 10px;
+      }
+      p.total {
+        color: #333333;
+        font-size: 16px;
+        .totalPrice {
+          font-weight: bold;
+        }
+      }
+    }
+    .rt {
+      flex-shrink: 0;
+      width: 100px;
+      .toBalance {
+        display: block;
+        width: 100px;
+        height: 100%;
+        line-height: 44px;
+        background-color: #ff5151;
+        color: #fff;
+        font-size: 15px;
+        text-align: center;
+      }
+      .delete {
+        display: block;
+        width: 78px;
+        height: 28px;
+        line-height: 30px;
+        border: 1px solid #e0e0e0;
+        background-color: #fff;
+        color: #666666;
+        font-size: 15px;
+        text-align: center;
+        margin-top: 7px;
+        margin-left: 5px;
+        border-radius: 15px;
       }
     }
   }
