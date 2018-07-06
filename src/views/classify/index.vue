@@ -232,6 +232,10 @@ export default {
       -webkit-overflow-scrolling: touch;
       .goods-list .goods-list-item {
         padding: 10px;
+        &:before {
+          left: 10px;
+          right: 10px;
+        }
       }
     }
   }

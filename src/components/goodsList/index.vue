@@ -50,15 +50,14 @@ export default {
     &:before {
       content: " ";
       position: absolute;
-      left: 0;
+      left: 20px;
       top: 0;
-      right: 0;
+      right: 20px;
       height: 1px;
       border-top: 1px solid #e0e0e0;
       color: #e5e5e5;
       transform-origin: 0 0;
       transform: scaleY(0.5);
-      left: 15px;
     }
     &:first-child:before {
       display: none;

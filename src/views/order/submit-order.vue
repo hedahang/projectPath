@@ -207,6 +207,7 @@ export default {
         position: relative;
         border-bottom: 1px solid #e0e0e0;
         &:before {
+          display: none;
           content: " ";
           position: absolute;
           left: 0;
