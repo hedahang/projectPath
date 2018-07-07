@@ -11,7 +11,7 @@
         <img slot="icon-active" :src="pocket_pre">
         <span slot="label">口袋</span>
       </tabbar-item>
-      <tabbar-item link="/component/demo" :selected="selected=='my'">
+      <tabbar-item link="/my" :selected="selected=='my'">
         <img slot="icon" :src="my">
         <img slot="icon-active" :src="my_pre">
         <span slot="label">我的</span>

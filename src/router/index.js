@@ -8,54 +8,66 @@ import Register from '@/views/register/index'
 import Classify from '@/views/classify/index'
 import Goods from '@/views/goods/detail'
 import SubmitOrder from '@/views/order/submit-order'
+import Order from '@/views/order/index'
 import Carts from '@/views/carts/index'
+import My from '@/views/my/index'
 
 Vue.use(Router)
 
 export default new Router({
-    routes: [{
-            path: '/',
-            redirect: '/home',
-        },
-        {
-            path: '/home',
-            component: Home,
-            name: 'home',
-        },
-        {
-            path: '/search',
-            component: Search,
-            name: 'search',
-        },
-        {
-            path: '/login',
-            component: Login,
-            name: 'login',
-        },
-        {
-            path: '/classify',
-            component: Classify,
-            name: 'classify',
-        },
-        {
-            path: '/register',
-            component: Register,
-            name: 'register'
-        },
-        {
-            path: '/goods',
-            component: Goods,
-            name: 'goods',
-        },
-        {
-            path: '/submitOrder',
-            component: SubmitOrder,
-            name: 'submit-order',
-        },
-        {
-            path: '/carts',
-            component: Carts,
-            name: 'carts',
-        }
-    ]
+  routes: [{
+      path: '/',
+      redirect: '/home',
+    },
+    {
+      path: '/home',
+      component: Home,
+      name: 'home',
+    },
+    {
+      path: '/search',
+      component: Search,
+      name: 'search',
+    },
+    {
+      path: '/login',
+      component: Login,
+      name: 'login',
+    },
+    {
+      path: '/classify',
+      component: Classify,
+      name: 'classify',
+    },
+    {
+      path: '/register',
+      component: Register,
+      name: 'register'
+    },
+    {
+      path: '/goods',
+      component: Goods,
+      name: 'goods',
+    },
+    {
+      path: '/submitOrder',
+      component: SubmitOrder,
+      name: 'submit-order',
+    },
+    {
+      path: '/order',
+      component: Order,
+      name: 'order',
+    },
+    {
+      path: '/carts',
+      component: Carts,
+      name: 'carts',
+    },
+    {
+      path: '/my',
+      component: My,
+      name: 'my',
+    }
+  ]
 })

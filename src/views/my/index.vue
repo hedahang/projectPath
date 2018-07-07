@@ -1,39 +1,51 @@
 <template>
-  <div class="carts container">
-    <x-header class="home-header header-bar" :left-options="{showBack: false}" :title="pageTitle" style="background-color:#FF5151;">
-      <span @click="changeEdit" style="font-size: 15px;color: #ffffff;" slot="right">{{headerRight}}</span>
-    </x-header>
-    <!-- 商品列表 -->
-    <div class="goods-box">
-        <aside class="goods-lf">
-            <ul>
-                <li v-for="(item,index) in goodsList" :key='index' class="ui center">
-                    <span></span>
-                </li>
-            </ul>
-        </aside>
-        <div class="goods-rt">
-            <goodsListC :list="goodsList"></goodsListC>
+  <div class="my container">
+    <header class="ui jcenter">
+        <div class="my-header ui acenter">
+            <img src="../../assets/images/my_icon_head@2x.png" alt="头像">
+            <p class="username ellitext">登录/注册</p>
         </div>
-    </div>
-    <divider>我是有底线的</divider>
-    <!-- 结算栏 -->
-    <div class="balance ui jbetween">
-        <div class="lf f1 ui acenter">
-            <span class="checkAll checked"></span>
-            <span class="checkAllText">全选</span>
-            <p v-show="!edit" class="total">
-                <span class="totalText">合计:</span>
-                <span class="totalPrice">￥8.00</span>
-            </p>
-        </div>
-        <div class="rt fshrink">
-            <span v-show="!edit" class="toBalance">去结算</span>
-            <span v-show="edit" class="delete">删除</span>
-        </div>
+    </header>
+    <!-- 列表 -->
+    <div class="my-list">
+      <router-link to="/order" class="row ui acenter jbetween">
+          <div class="lf ui acenter">
+              <span class="icon-my-order"></span>
+              <span class='lf-text'>我的订单</span>
+          </div>
+          <div class="rt icon-right"></div>
+      </router-link>
+      <router-link to="/coupon/index" class="row ui acenter jbetween">
+          <div class="lf ui acenter">
+              <span class="icon-my-coupon"></span>
+              <span class='lf-text'>优惠券</span>
+          </div>
+          <div class="rt icon-right"></div>
+      </router-link>
+      <router-link to="/address/index" class="row ui acenter jbetween">
+          <div class="lf ui acenter">
+              <span class="icon-my-address"></span>
+              <span class='lf-text'>收货地址</span>
+          </div>
+          <div class="rt icon-right"></div>
+      </router-link>
+      <router-link to="/setting/index" class="row ui acenter jbetween">
+          <div class="lf ui acenter">
+              <span class="icon-my-setting"></span>
+              <span class='lf-text'>设置</span>
+          </div>
+          <div class="rt icon-right"></div>
+      </router-link>
+      <router-link to="/opinion/index" class="row ui acenter jbetween">
+          <div class="lf ui acenter">
+              <span class="icon-my-opinion"></span>
+              <span class='lf-text'>意见反馈</span>
+          </div>
+          <div class="rt icon-right"></div>
+      </router-link>
     </div>
     <!-- 底部导航栏 -->
-    <footerBar selected="pocket"></footerBar>
+    <footerBar selected="my"></footerBar>
   </div>
 </template>
 
@@ -171,54 +183,77 @@ export default {
 </script>
 
 <style rel="stylesheet/less" lang="less">
-.carts {
-  padding: 46px 0 94px;
-  .home-header {
-    position: fixed;
+.my {
+  padding: 0px 0 50px;
+  header {
     width: 100%;
-    left: 0;
-    top: 0;
-    z-index: 100;
-  }
-  .goods-box {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    background-color: #fff;
-    overflow: hidden;
-    .goods-lf {
-      width: 30px;
-      flex-shrink: 0;
-      ul {
+    height: 194px;
+    background-color: #ff5151;
+    position: relative;
+    &:after {
+      content: "";
+      position: absolute;
+      left: 0px;
+      right: 0px;
+      bottom: 0px;
+      height: 47.5px;
+      background: url("../../assets/images/my_bg_head@2x.png") no-repeat 0 0;
+      background-size: cover;
+    }
+    .my-header {
+      width: 80%;
+      margin: 44px auto 0px;
+      flex-direction: column;
+      img {
+        width: 60px;
+        height: 60px;
+        display: block;
+      }
+      .username {
+        font-size: 15px;
+        color: #fff;
+        margin-top: 11px;
+        letter-spacing: 1px;
         width: 100%;
-        height: 100%;
-        margin-top: 7px;
-        li {
-          width: 100%;
-          height: 103px;
-          justify-content: flex-end;
-          span {
-            display: block;
-            width: 18px;
-            height: 18px;
-            box-sizing: border-box;
-            border: 1px solid #bbbbbb;
-            border-radius: 50%;
-            &.checked {
-              border: none;
-              background: url("../../assets/images/pocket_btn_choose@2x.png")
-                no-repeat 0 0;
-              background-size: 100%;
-            }
-          }
-        }
+        text-align: center;
       }
     }
-    .goods-rt {
-      flex: 1;
-      overflow: hidden;
-      .goods-list .goods-list-item {
-        padding: 10px 20px 10px 10px;
+  }
+  .my-list {
+    margin-top: 10px;
+    background-color: #fff;
+    padding: 0 15px;
+    box-sizing: border-box;
+    width: 100%;
+    .row {
+      height: 44px;
+      border-bottom: 1px solid #e0e0e0;
+      font-size: 15px;
+      &:last-child {
+        border-bottom: none;
+      }
+      .lf {
+        color: #333333;
+        font-weight: 400;
+        span {
+          vertical-align: middle;
+        }
+      }
+      .rt {
+        color: #666666;
+        height: 20px;
+        line-height: 20px;
+        &.icon-right {
+          padding-right: 24px;
+          background: url("../../assets/images/my_btn_next@2x.png") no-repeat
+            right center;
+          background-size: 8px 15px;
+        }
+        &.red {
+          color: #ff5151;
+          font-size: 15px;
+          font-weight: bold;
+        }
       }
     }
   }

@@ -47,6 +47,8 @@ export default {
     align-items: center;
     padding: 10px 20px;
     position: relative;
+    width: 100%;
+    box-sizing: border-box;
     &:before {
       content: " ";
       position: absolute;

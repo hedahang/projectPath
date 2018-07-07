@@ -1,39 +1,28 @@
 <template>
-  <div class="carts container">
-    <x-header class="home-header header-bar" :left-options="{showBack: false}" :title="pageTitle" style="background-color:#FF5151;">
-      <span @click="changeEdit" style="font-size: 15px;color: #ffffff;" slot="right">{{headerRight}}</span>
+  <div class="my-order container">
+    <x-header class="home-header header-bar" :left-options="{backText: ''}" :title="pageTitle" style="background-color:#FF5151;">
     </x-header>
-    <!-- 商品列表 -->
+    <!-- 订单商品列表 -->
     <div class="goods-box">
-        <aside class="goods-lf">
-            <ul>
-                <li v-for="(item,index) in goodsList" :key='index' class="ui center">
-                    <span></span>
-                </li>
-            </ul>
-        </aside>
-        <div class="goods-rt">
-            <goodsListC :list="goodsList"></goodsListC>
+        <div class="goods-list">
+            <a v-for="(item,index) in goodsList" :key='index' class="goods-list-item" href="#/goods">
+                <div class="item-lf">
+                    <img :src="item.img" alt="">
+                </div>
+                <div class="item-rt">
+                    <h4 class="item-rt_title ui jbetween">
+                        <span class='ellitext'>{{item.title}}</span>
+                        <span class="status">已完成</span>
+                    </h4>
+                    <p class="item-rt_desc">{{item.desc}}</p>
+                    <p class="item-rt_sales">月销售{{item.sales}}份</p>
+                    <div class="item_rt_footer">
+                        <span class='price'>￥{{item.price}}</span>
+                    </div>
+                </div>
+            </a>
         </div>
     </div>
-    <divider>我是有底线的</divider>
-    <!-- 结算栏 -->
-    <div class="balance ui jbetween">
-        <div class="lf f1 ui acenter">
-            <span class="checkAll checked"></span>
-            <span class="checkAllText">全选</span>
-            <p v-show="!edit" class="total">
-                <span class="totalText">合计:</span>
-                <span class="totalPrice">￥8.00</span>
-            </p>
-        </div>
-        <div class="rt fshrink">
-            <span v-show="!edit" class="toBalance">去结算</span>
-            <span v-show="edit" class="delete">删除</span>
-        </div>
-    </div>
-    <!-- 底部导航栏 -->
-    <footerBar selected="pocket"></footerBar>
   </div>
 </template>
 
@@ -57,15 +46,14 @@ export default {
   name: "home",
   data() {
     return {
-      pageTitle: "口袋",
-      headerRight: "编辑",
+      pageTitle: "我的订单",
       edit: false,
       goodsList: [
         {
           img:
             "http://ofjo26fgy.bkt.clouddn.com/21d87e11b15046bfb4a6f73af2c3b80e.jpg",
-          title: "薯片",
-          desc: "非常棒的薯片",
+          title: "可比克麻辣番茄味薯片",
+          desc: "非常非常非常棒的可比克麻辣番茄味薯片哦",
           sales: "2000",
           price: "8",
           number: 999
@@ -96,42 +84,6 @@ export default {
           sales: "2000",
           price: "8",
           number: 999
-        },
-        {
-          img:
-            "http://ofjo26fgy.bkt.clouddn.com/21d87e11b15046bfb4a6f73af2c3b80e.jpg",
-          title: "薯片",
-          desc: "非常棒的薯片",
-          sales: "2000",
-          price: "8",
-          number: 0
-        },
-        {
-          img:
-            "http://ofjo26fgy.bkt.clouddn.com/21d87e11b15046bfb4a6f73af2c3b80e.jpg",
-          title: "薯片",
-          desc: "非常棒的薯片",
-          sales: "2000",
-          price: "8",
-          number: 0
-        },
-        {
-          img:
-            "http://ofjo26fgy.bkt.clouddn.com/21d87e11b15046bfb4a6f73af2c3b80e.jpg",
-          title: "薯片",
-          desc: "非常棒的薯片",
-          sales: "2000",
-          price: "8",
-          number: 0
-        },
-        {
-          img:
-            "http://ofjo26fgy.bkt.clouddn.com/21d87e11b15046bfb4a6f73af2c3b80e.jpg",
-          title: "薯片",
-          desc: "非常棒的薯片",
-          sales: "2000",
-          price: "8",
-          number: 0
         }
       ]
     };
@@ -171,7 +123,7 @@ export default {
 </script>
 
 <style rel="stylesheet/less" lang="less">
-.carts {
+.my-order {
   padding: 46px 0 94px;
   .home-header {
     position: fixed;
@@ -185,40 +137,91 @@ export default {
     height: 100%;
     display: flex;
     background-color: #fff;
-    overflow: hidden;
-    .goods-lf {
-      width: 30px;
-      flex-shrink: 0;
-      ul {
+    .goods-list {
+      width: 100%;
+      background-color: #fff;
+      .goods-list-item {
+        display: flex;
+        align-items: center;
+        padding: 10px 20px;
+        position: relative;
         width: 100%;
-        height: 100%;
-        margin-top: 7px;
-        li {
-          width: 100%;
-          height: 103px;
-          justify-content: flex-end;
-          span {
-            display: block;
-            width: 18px;
-            height: 18px;
-            box-sizing: border-box;
-            border: 1px solid #bbbbbb;
-            border-radius: 50%;
-            &.checked {
-              border: none;
-              background: url("../../assets/images/pocket_btn_choose@2x.png")
-                no-repeat 0 0;
-              background-size: 100%;
+        box-sizing: border-box;
+        &:before {
+          content: " ";
+          position: absolute;
+          left: 20px;
+          top: 0;
+          right: 20px;
+          height: 1px;
+          border-top: 1px solid #e0e0e0;
+          color: #e5e5e5;
+          transform-origin: 0 0;
+          transform: scaleY(0.5);
+        }
+        &:first-child:before {
+          display: none;
+        }
+        .item-lf {
+          margin-right: 0.8em;
+          width: 80px;
+          height: 80px;
+          line-height: 80px;
+          text-align: center;
+          img {
+            width: 100%;
+            max-height: 100%;
+            vertical-align: top;
+          }
+        }
+        .item-rt {
+          -webkit-box-flex: 1;
+          -webkit-flex: 1;
+          flex: 1;
+          min-width: 0;
+          .item-rt_title,
+          .item-rt_desc,
+          .item-rt_sales {
+            font-weight: 400;
+            font-size: 15px;
+            color: #333333;
+            width: auto;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            word-wrap: normal;
+            word-wrap: break-word;
+            word-break: break-all;
+          }
+          .item-rt_title {
+            .status {
+              font-size: 15px;
+              color: #999;
+            }
+          }
+          .item-rt_desc {
+            margin: 4px 0;
+            color: #999999;
+            font-size: 12px;
+            font-weight: normal;
+          }
+          .item-rt_sales {
+            color: #666666;
+            font-weight: normal;
+            margin: 4px 0;
+            font-size: 12px;
+          }
+          .item_rt_footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            .price {
+              color: #ff5151;
+              font-size: 15px;
+              font-weight: bold;
             }
           }
         }
-      }
-    }
-    .goods-rt {
-      flex: 1;
-      overflow: hidden;
-      .goods-list .goods-list-item {
-        padding: 10px 20px 10px 10px;
       }
     }
   }
