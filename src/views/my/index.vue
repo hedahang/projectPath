@@ -29,7 +29,7 @@
           </div>
           <div class="rt icon-right"></div>
       </router-link>
-      <router-link to="/setting/index" class="row ui acenter jbetween">
+      <router-link to="/setting" class="row ui acenter jbetween">
           <div class="lf ui acenter">
               <span class="icon-my-setting"></span>
               <span class='lf-text'>设置</span>
