@@ -50,6 +50,7 @@ import {
 import footerBar from "@/components/footerBar/index";
 import goodsListC from "@/components/goodsList/index";
 import iconSearch from "@/assets/images/home_icon_search@2x.png";
+import {$, util} from '@/utils/index'
 export default {
   name: "home",
   data() {

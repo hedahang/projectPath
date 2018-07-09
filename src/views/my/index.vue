@@ -15,7 +15,7 @@
           </div>
           <div class="rt icon-right"></div>
       </router-link>
-      <router-link to="/coupon/index" class="row ui acenter jbetween">
+      <router-link to="/coupon" class="row ui acenter jbetween">
           <div class="lf ui acenter">
               <span class="icon-my-coupon"></span>
               <span class='lf-text'>优惠券</span>

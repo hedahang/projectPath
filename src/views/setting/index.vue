@@ -26,14 +26,14 @@
         </router-link>
       </div>
       <div class="setting-list" style="margin-top:10px;">
-        <div class="row ui acenter jbetween">
+        <router-link to="/setMobile" class="row ui acenter jbetween">
           <div class="lf ui acenter">
             <span class='lf-text'>绑定手机</span>
           </div>
           <div class="rt icon-right">
             <span class="gray">{{mobile}}</span>
           </div>
-        </div>
+        </router-link>
       </div>
     </div>
     <!-- 退出登录 -->
