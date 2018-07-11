@@ -22,7 +22,7 @@
           </div>
           <div class="rt icon-right"></div>
       </router-link>
-      <router-link to="/address/index" class="row ui acenter jbetween">
+      <router-link to="/address" class="row ui acenter jbetween">
           <div class="lf ui acenter">
               <span class="icon-my-address"></span>
               <span class='lf-text'>收货地址</span>
@@ -36,7 +36,7 @@
           </div>
           <div class="rt icon-right"></div>
       </router-link>
-      <router-link to="/opinion/index" class="row ui acenter jbetween">
+      <router-link to="/opinion" class="row ui acenter jbetween">
           <div class="lf ui acenter">
               <span class="icon-my-opinion"></span>
               <span class='lf-text'>意见反馈</span>

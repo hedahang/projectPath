@@ -15,6 +15,9 @@ import Setting from '@/views/setting/index'
 import UpdateName from '@/views/setting/updateName'
 import SetMobile from '@/views/setting/setMobile'
 import Coupon from '@/views/coupon/index'
+import Address from '@/views/address/index'
+import AddAddress from '@/views/address/add'
+import Opinion from '@/views/opinion/index'
 
 Vue.use(Router)
 
@@ -92,6 +95,21 @@ export default new Router({
             path: '/coupon',
             component: Coupon,
             name: 'coupon',
+        },
+        {
+            path: '/address',
+            component: Address,
+            name: 'address',
+        },
+        {
+            path: '/address/add',
+            component: AddAddress,
+            name: 'addAddress',
+        },
+        {
+            path: '/opinion',
+            component: Opinion,
+            name: 'opinion',
         },
     ]
 })
