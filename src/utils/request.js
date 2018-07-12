@@ -34,7 +34,6 @@ service.interceptors.response.use(
          * code为非200是抛错 可结合自己业务进行修改
          */
         const rs = response.data;
-        console.log(Vue)
         if (!rs.status) {
             // 业务错误
             erroMsg = rs.message;

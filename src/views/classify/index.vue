@@ -69,17 +69,6 @@ export default {
             "https://ww1.sinaimg.cn/large/663d3650gy1fq66vvsr72j20p00gogo2.jpg" // 404
         }
       ],
-      goodsList: [
-        {
-          image:
-            "http://ofjo26fgy.bkt.clouddn.com/21d87e11b15046bfb4a6f73af2c3b80e.jpg",
-          name: "薯片",
-          description: "非常棒的薯片",
-          sales: "2000",
-          sale_price: "8",
-          number: 999
-        },
-      ],
       data:[],
       curClass:0, // 当前分类
     };
@@ -97,6 +86,11 @@ export default {
     GroupTitle,
     footerBar,
     goodsListC
+  },
+  computed:{
+    goodsList:function(){
+      return this.data[this.curClass]&&this.data[this.curClass].goods;
+    }
   },
   created() {
     let Cheight = document.documentElement.clientHeight;
@@ -122,11 +116,6 @@ export default {
       this.$router.push("/search");
     }
   },
-  computed: {
-    getName: function() {
-      return "zhangsww";
-    }
-  }
 };
 </script>
 
