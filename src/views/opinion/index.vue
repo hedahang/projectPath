@@ -1,20 +1,28 @@
 <template>
-  <div class="my-setting-updateName container">
+  <div class="my-setting-opinion container">
     <x-header class="home-header header-bar" :left-options="{backText: ''}" :title="pageTitle" style="background-color:#FF5151;">
     </x-header>
-    <!-- 列表 -->
-    <div class="setting-box">
-      <div class="setting-list">
-        <div class="row ui acenter jbetween">
-          <group class="updateName" style="width:100%">
-            <x-input title="" required placeholder="请输入昵称" :show-clear="true"></x-input>
-          </group>
-        </div>
-      </div>
+    <!-- 常见问题 -->
+    <div class="opinion-title">
+      <span>常见问题</span>
+    </div>
+    <div class="opinion-list">
+      <router-link to="/opinion/detail" class="opinion-item ui acenter jbetween">
+        <div class="lf">图片无法加载</div>
+        <div class="rt icon-right"></div>
+      </router-link>
+      <router-link to="/opinion/detail" class="opinion-item ui acenter jbetween">
+        <div class="lf">积分如何获取</div>
+        <div class="rt icon-right"></div>
+      </router-link>
+      <router-link to="/opinion/detail" class="opinion-item ui acenter jbetween">
+        <div class="lf">昵称无法更改</div>
+        <div class="rt icon-right"></div>
+      </router-link>
     </div>
     <!-- 确认 -->
     <div class="confirm">
-      <div class="confirm-box ui center">确认</div>
+      <div class="confirm-box ui center">写反馈</div>
     </div>
   </div>
 </template>
@@ -22,10 +30,10 @@
 <script>
 import { XHeader, XInput, Group, Cell } from "vux";
 export default {
-  name: "updateName",
+  name: "opinion",
   data() {
     return {
-      pageTitle: "意见反馈",
+      pageTitle: "意见反馈"
     };
   },
   components: {
@@ -45,7 +53,7 @@ export default {
 </script>
 
 <style rel="stylesheet/less" lang="less">
-.my-setting-updateName {
+.my-setting-opinion {
   padding: 46px 0 94px;
   .home-header {
     position: fixed;
@@ -54,44 +62,48 @@ export default {
     top: 0;
     z-index: 100;
   }
-  .setting-box {
+  .opinion-title {
+    border-bottom: 1px solid #e0e0e0;
+    height: 30px;
+    line-height: 30px;
+    box-sizing: border-box;
     width: 100%;
-    height: 100%;
-    .setting-list {
-      width: 100%;
-      box-sizing: border-box;
-      background-color: #fff;
-      .row {
-        font-size: 15px;
-        .updateName {
-          & > .weui-cells {
-            margin-top: 0;
-            &:before {
-              display: none;
-            }
-            &:after {
-              display: none;
-            }
-            .weui-input {
-              font-size: 15px;
-              &::-webkit-input-placeholder {
-                /* WebKit browsers */
-                color: #bbb;
-              }
-              &:-moz-placeholder {
-                /* Mozilla Firefox 4 to 18 */
-                color: #bbb;
-              }
-              &::-moz-placeholder {
-                /* Mozilla Firefox 19+ */
-                color: #bbb;
-              }
-              &:-ms-input-placeholder {
-                /* Internet Explorer 10+ */
-                color: #bbb;
-              }
-            }
-          }
+    background-color: #fff;
+    span {
+      display: block;
+      font-size: 13px;
+      color: #999999;
+      margin-left: 16px;
+    }
+  }
+  .opinion-list {
+    background-color: #fff;
+    padding: 0 15px;
+    box-sizing: border-box;
+    width: 100%;
+    .opinion-item {
+      height: 44px;
+      border-bottom: 1px solid #e0e0e0;
+      font-size: 15px;
+      &:last-child {
+        border-bottom: none;
+      }
+      .lf {
+        color: #333333;
+        font-weight: 400;
+        span {
+          vertical-align: middle;
+        }
+      }
+      .rt {
+        color: #666666;
+        height: 20px;
+        line-height: 20px;
+        &.icon-right {
+          padding-right: 24px;
+          background: url("../../assets/images/my_btn_next@2x.png") no-repeat
+            right center;
+          background-size: 8px 15px;
         }
       }
     }

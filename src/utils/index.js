@@ -1,5 +1,6 @@
 import { cookie } from 'vux'
 import request from './request'
+import msg from './msg'
 
 let util = {
     // 时间格式化

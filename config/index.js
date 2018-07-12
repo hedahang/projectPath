@@ -6,11 +6,19 @@ const path = require('path')
 
 module.exports = {
     dev: {
-
         // Paths
         assetsSubDirectory: 'static',
         assetsPublicPath: '/',
-        proxyTable: {},
+        proxyTable: {
+            // 用‘/url’开头，代理所有请求到目标服务器
+            '/api': {
+                target: 'http://wm.bookround.com', // 接口域名
+                changeOrigin: true, // 是否启用跨域
+                pathRewrite: { //
+                    '^/api': '/api'
+                }
+            }
+        },
 
         // Various Dev Server settings
         host: 'localhost', // can be overwritten by process.env.HOST

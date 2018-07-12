@@ -55,7 +55,8 @@ export default {
       src:
         "http://img1.vued.vanthink.cn/vued0a233185b6027244f9d43e653227439a.png",
       name: "海是倒过来的天",
-      mobile: 13000000000
+      mobile: 13000000000,
+      data:null
     };
   },
   components: {

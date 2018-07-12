@@ -5,8 +5,8 @@
     </x-header>
     <!-- 注册表单 -->
     <group gutter='0'>
-      <x-input required title="" v-model="mobile" :max="13" is-type="china-mobile" placeholder="请输入手机号"></x-input>
-      <x-input required title="" v-model="password" type="password" placeholder="请输入密码"></x-input>
+      <x-input :icon-type="iconType1" required title="" v-model="mobile" :max="13" is-type="china-mobile" placeholder="请输入手机号"></x-input>
+      <x-input :icon-type="iconType" required title="" v-model="password" type="password" placeholder="请输入密码"></x-input>
     </group>
     <div class="loginBtn">
         <x-button @button-global-font-size='18' @click.native="toLogin" type="primary">确认</x-button>
@@ -16,12 +16,15 @@
 
 <script>
 import { XInput, Group, XHeader, XButton } from "vux";
+import { util, request as $, cookie } from "@/utils/index";
 export default {
   name: "login",
   data() {
     return {
       mobile: "",
-      password: ""
+      password: "",
+      iconType1: "",
+      iconType: ""
     };
   },
   components: {
@@ -32,7 +35,22 @@ export default {
   },
   methods: {
     toLogin() {
-      console.log("登录");
+      console.log(this.mobile);
+      if (this.mobile == "" || !this.mobile) {
+        this.$vux.toast.text("手机号不能为空", "middle");
+      } else if (this.password == "" || !this.password) {
+        this.$vux.toast.text("密码不能为空", "middle");
+      } else {
+        $.post("/api/login", {
+          mobile: this.mobile,
+          password: this.password
+        }).then(res => {
+          if (res.status) {
+            cookie.set("token", res.data && res.data.token);
+            this.$router.replace("home");
+          }
+        });
+      }
     }
   }
 };
