@@ -48,44 +48,17 @@ export default {
     return {
       pageTitle: "我的订单",
       edit: false,
-      goodsList: [
+       goodsList: [
         {
-          img:
+          image:
             "http://ofjo26fgy.bkt.clouddn.com/21d87e11b15046bfb4a6f73af2c3b80e.jpg",
-          title: "可比克麻辣番茄味薯片",
-          desc: "非常非常非常棒的可比克麻辣番茄味薯片哦",
+          name: "薯片",
+          description: "非常棒的薯片",
           sales: "2000",
-          price: "8",
+          sale_price: "8",
           number: 999
         },
-        {
-          img:
-            "http://ofjo26fgy.bkt.clouddn.com/21d87e11b15046bfb4a6f73af2c3b80e.jpg",
-          title: "薯片",
-          desc: "非常棒的薯片",
-          sales: "2000",
-          price: "8",
-          number: 999
-        },
-        {
-          img:
-            "http://ofjo26fgy.bkt.clouddn.com/21d87e11b15046bfb4a6f73af2c3b80e.jpg",
-          title: "薯片",
-          desc: "非常棒的薯片",
-          sales: "2000",
-          price: "8",
-          number: 999
-        },
-        {
-          img:
-            "http://ofjo26fgy.bkt.clouddn.com/21d87e11b15046bfb4a6f73af2c3b80e.jpg",
-          title: "薯片",
-          desc: "非常棒的薯片",
-          sales: "2000",
-          price: "8",
-          number: 999
-        }
-      ]
+      ],
     };
   },
   components: {

@@ -16,16 +16,16 @@
     </swiper>
     <!-- 分类栏 -->
     <grid :show-lr-borders="false" :show-vertical-dividers="false">
-      <grid-item link="/classify" label="推荐">
+      <grid-item v-for="item in classifyList" :key='item.id' :link="'/classify?id='+item.id" :label="item.name">
         <img slot="icon" src="../../assets/images/home_btn_recommend@2x.png">
       </grid-item>
-      <grid-item :link="{ path: '/classify'}" label="零食">
+      <!-- <grid-item :link="{ path: '/classify'}" label="零食">
         <img slot="icon" src="../../assets/images/home_btn_snacks@2x.png">
       </grid-item>
       <grid-item link="/classify" @on-item-click="onItemClick">
         <img slot="icon" src="../../assets/images/home_btn_cosmetics@2x.png">
         <span slot="label">美妆</span>
-      </grid-item>
+      </grid-item> -->
     </grid>
     <!-- 商品列表 -->
     <goodsListC :list="goodsList"></goodsListC>
@@ -50,12 +50,13 @@ import {
 import footerBar from "@/components/footerBar/index";
 import goodsListC from "@/components/goodsList/index";
 import iconSearch from "@/assets/images/home_icon_search@2x.png";
-import {$, util} from '@/utils/index'
+import { util, request as $, cookie } from "@/utils/index";
 export default {
   name: "home",
   data() {
     return {
       iconSearch: iconSearch,
+      classifyList: [],
       bannerList: [
         {
           url: "javascript:",
@@ -73,53 +74,17 @@ export default {
             "https://ww1.sinaimg.cn/large/663d3650gy1fq66vvsr72j20p00gogo2.jpg" // 404
         }
       ],
-      goodsList: [
+       goodsList: [
         {
-          img:
+          image:
             "http://ofjo26fgy.bkt.clouddn.com/21d87e11b15046bfb4a6f73af2c3b80e.jpg",
-          title: "薯片",
-          desc: "非常棒的薯片",
+          name: "薯片",
+          description: "非常棒的薯片",
           sales: "2000",
-          price: "8",
-          number: 0
+          sale_price: "8",
+          number: 999
         },
-        {
-          img:
-            "http://ofjo26fgy.bkt.clouddn.com/21d87e11b15046bfb4a6f73af2c3b80e.jpg",
-          title: "薯片",
-          desc: "非常棒的薯片",
-          sales: "2000",
-          price: "8",
-          number: 0
-        },
-        {
-          img:
-            "http://ofjo26fgy.bkt.clouddn.com/21d87e11b15046bfb4a6f73af2c3b80e.jpg",
-          title: "薯片",
-          desc: "非常棒的薯片",
-          sales: "2000",
-          price: "8",
-          number: 0
-        },
-        {
-          img:
-            "http://ofjo26fgy.bkt.clouddn.com/21d87e11b15046bfb4a6f73af2c3b80e.jpg",
-          title: "薯片",
-          desc: "非常棒的薯片",
-          sales: "2000",
-          price: "8",
-          number: 0
-        },
-        {
-          img:
-            "http://ofjo26fgy.bkt.clouddn.com/21d87e11b15046bfb4a6f73af2c3b80e.jpg",
-          title: "薯片",
-          desc: "非常棒的薯片",
-          sales: "2000",
-          price: "8",
-          number: 0
-        }
-      ]
+      ],
     };
   },
   components: {
@@ -136,20 +101,29 @@ export default {
     footerBar,
     goodsListC
   },
+  computed: {
+    classifyLink: function(id) {
+      return "zhangsww";
+    }
+  },
+  created() {
+    this.getPageData();
+  },
   methods: {
-    onItemClick() {
-      console.log("123");
+    getPageData() {
+      // this.$vux.loading.show()
+      // this.$vux.loading.hide()
+      //商品分类
+      $.get("/api/categories").then(response => {
+        this.classifyList = response.data;
+      });
+      
     },
     toSearch() {
       //   console.log("123");
       this.$router.push("/search");
     }
   },
-  computed: {
-    getName: function() {
-      return "zhangsww";
-    }
-  }
 };
 </script>
 

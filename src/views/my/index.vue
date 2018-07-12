@@ -72,80 +72,17 @@ export default {
       pageTitle: "口袋",
       headerRight: "编辑",
       edit: false,
-      goodsList: [
+       goodsList: [
         {
-          img:
+          image:
             "http://ofjo26fgy.bkt.clouddn.com/21d87e11b15046bfb4a6f73af2c3b80e.jpg",
-          title: "薯片",
-          desc: "非常棒的薯片",
+          name: "薯片",
+          description: "非常棒的薯片",
           sales: "2000",
-          price: "8",
+          sale_price: "8",
           number: 999
         },
-        {
-          img:
-            "http://ofjo26fgy.bkt.clouddn.com/21d87e11b15046bfb4a6f73af2c3b80e.jpg",
-          title: "薯片",
-          desc: "非常棒的薯片",
-          sales: "2000",
-          price: "8",
-          number: 999
-        },
-        {
-          img:
-            "http://ofjo26fgy.bkt.clouddn.com/21d87e11b15046bfb4a6f73af2c3b80e.jpg",
-          title: "薯片",
-          desc: "非常棒的薯片",
-          sales: "2000",
-          price: "8",
-          number: 999
-        },
-        {
-          img:
-            "http://ofjo26fgy.bkt.clouddn.com/21d87e11b15046bfb4a6f73af2c3b80e.jpg",
-          title: "薯片",
-          desc: "非常棒的薯片",
-          sales: "2000",
-          price: "8",
-          number: 999
-        },
-        {
-          img:
-            "http://ofjo26fgy.bkt.clouddn.com/21d87e11b15046bfb4a6f73af2c3b80e.jpg",
-          title: "薯片",
-          desc: "非常棒的薯片",
-          sales: "2000",
-          price: "8",
-          number: 0
-        },
-        {
-          img:
-            "http://ofjo26fgy.bkt.clouddn.com/21d87e11b15046bfb4a6f73af2c3b80e.jpg",
-          title: "薯片",
-          desc: "非常棒的薯片",
-          sales: "2000",
-          price: "8",
-          number: 0
-        },
-        {
-          img:
-            "http://ofjo26fgy.bkt.clouddn.com/21d87e11b15046bfb4a6f73af2c3b80e.jpg",
-          title: "薯片",
-          desc: "非常棒的薯片",
-          sales: "2000",
-          price: "8",
-          number: 0
-        },
-        {
-          img:
-            "http://ofjo26fgy.bkt.clouddn.com/21d87e11b15046bfb4a6f73af2c3b80e.jpg",
-          title: "薯片",
-          desc: "非常棒的薯片",
-          sales: "2000",
-          price: "8",
-          number: 0
-        }
-      ]
+      ],
     };
   },
   components: {

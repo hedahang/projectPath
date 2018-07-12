@@ -13,11 +13,9 @@
     <div class="goods-box" :style="{height:classifyGoodsHeight+'px'}">
         <aside class="goods-lf">
             <ul>
-                <li class="current"><a href="#">薯片</a></li>
-                <li><a href="#">糖果</a></li>
-                <li><a href="#">巧克力</a></li>
-                <li><a href="#">坚果</a></li>
-                <li><a href="#">辣条</a></li>
+                <li v-for="(item,index) in data" :key="index" :class="index==curClass?'current':''">
+                  <a href="#" @click="curClass=index">{{item.name}}</a>
+                </li>
             </ul>
         </aside>
         <div class="goods-rt">
@@ -45,11 +43,13 @@ import {
 import footerBar from "@/components/footerBar/index";
 import goodsListC from "@/components/goodsList/index";
 import iconSearch from "@/assets/images/home_btn_search@2x.png";
+import { util, request as $, cookie } from "@/utils/index";
 export default {
   name: "home",
   data() {
     return {
       pageTitle: "零食",
+      classifyId: "",
       iconSearch: iconSearch,
       classifyGoodsHeight: 0,
       bannerList: [
@@ -71,78 +71,17 @@ export default {
       ],
       goodsList: [
         {
-          img:
+          image:
             "http://ofjo26fgy.bkt.clouddn.com/21d87e11b15046bfb4a6f73af2c3b80e.jpg",
-          title: "薯片",
-          desc: "非常棒的薯片",
+          name: "薯片",
+          description: "非常棒的薯片",
           sales: "2000",
-          price: "8",
+          sale_price: "8",
           number: 999
         },
-        {
-          img:
-            "http://ofjo26fgy.bkt.clouddn.com/21d87e11b15046bfb4a6f73af2c3b80e.jpg",
-          title: "薯片",
-          desc: "非常棒的薯片",
-          sales: "2000",
-          price: "8",
-          number: 999
-        },
-        {
-          img:
-            "http://ofjo26fgy.bkt.clouddn.com/21d87e11b15046bfb4a6f73af2c3b80e.jpg",
-          title: "薯片",
-          desc: "非常棒的薯片",
-          sales: "2000",
-          price: "8",
-          number: 999
-        },
-        {
-          img:
-            "http://ofjo26fgy.bkt.clouddn.com/21d87e11b15046bfb4a6f73af2c3b80e.jpg",
-          title: "薯片",
-          desc: "非常棒的薯片",
-          sales: "2000",
-          price: "8",
-          number: 999
-        },
-        {
-          img:
-            "http://ofjo26fgy.bkt.clouddn.com/21d87e11b15046bfb4a6f73af2c3b80e.jpg",
-          title: "薯片",
-          desc: "非常棒的薯片",
-          sales: "2000",
-          price: "8",
-          number: 0
-        },
-        {
-          img:
-            "http://ofjo26fgy.bkt.clouddn.com/21d87e11b15046bfb4a6f73af2c3b80e.jpg",
-          title: "薯片",
-          desc: "非常棒的薯片",
-          sales: "2000",
-          price: "8",
-          number: 0
-        },
-        {
-          img:
-            "http://ofjo26fgy.bkt.clouddn.com/21d87e11b15046bfb4a6f73af2c3b80e.jpg",
-          title: "薯片",
-          desc: "非常棒的薯片",
-          sales: "2000",
-          price: "8",
-          number: 0
-        },
-        {
-          img:
-            "http://ofjo26fgy.bkt.clouddn.com/21d87e11b15046bfb4a6f73af2c3b80e.jpg",
-          title: "薯片",
-          desc: "非常棒的薯片",
-          sales: "2000",
-          price: "8",
-          number: 0
-        }
-      ]
+      ],
+      data:[],
+      curClass:0, // 当前分类
     };
   },
   components: {
@@ -162,8 +101,19 @@ export default {
   created() {
     let Cheight = document.documentElement.clientHeight;
     this.classifyGoodsHeight = Cheight - 96;
+    // 分类id
+    let { id } = this.$route.query;
+    this.classifyId = id;
+    // 获取商品列表
+    this.getPageData();
   },
   methods: {
+    getPageData() {
+      //商品
+      $.get(`/api/categories/${this.classifyId}`).then(response => {
+        this.data = response.data&&response.data.categoryList;
+      });
+    },
     onItemClick() {
       console.log("123");
     },

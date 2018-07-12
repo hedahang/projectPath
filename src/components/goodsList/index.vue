@@ -2,14 +2,14 @@
   <div class="goods-list">
         <a v-for="(item,index) in list" :key='index' class="goods-list-item" href="#/goods">
             <div class="item-lf">
-                <img :src="item.img" alt="">
+                <img :src="item.image" alt="">
             </div>
             <div class="item-rt">
-                <h4 class="item-rt_title">{{item.title}}</h4>
-                <p class="item-rt_desc">{{item.desc}}</p>
+                <h4 class="item-rt_title">{{item.name}}</h4>
+                <p class="item-rt_desc">{{item.description}}</p>
                 <p class="item-rt_sales">月销售{{item.sales}}份</p>
                 <div class="item_rt_footer">
-                    <span class='price'>￥{{item.price}}</span>
+                    <span class='price'>￥{{item.sale_price}}</span>
                     <div class="item_rt_footer_number">
                       <inlineNumber :item="item"></inlineNumber>
                     </div>
