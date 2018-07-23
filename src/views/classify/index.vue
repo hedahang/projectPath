@@ -7,7 +7,7 @@
     </x-header>
     <!-- 轮播 -->
     <swiper :aspect-ratio="300/750">
-      <swiper-item class="swiper-demo-img" v-for="(item, index) in bannerList" :key="index"><img style="width:100%" :src="item.img"></swiper-item>
+      <swiper-item class="swiper-demo-img" v-for="(item, index) in bannerList" :key="index"><a :href="item.redirect_url"><img style="width:100%" :src="item.image"></a></swiper-item>
     </swiper>
     <!-- 商品列表 -->
     <div class="goods-box" :style="{height:classifyGoodsHeight+'px'}">
@@ -52,23 +52,7 @@ export default {
       classifyId: "",
       iconSearch: iconSearch,
       classifyGoodsHeight: 0,
-      bannerList: [
-        {
-          url: "javascript:",
-          img:
-            "https://ww1.sinaimg.cn/large/663d3650gy1fq66vvsr72j20p00gogo2.jpg"
-        },
-        {
-          url: "javascript:",
-          img:
-            "https://ww1.sinaimg.cn/large/663d3650gy1fq66vw1k2wj20p00goq7n.jpg"
-        },
-        {
-          url: "javascript:",
-          img:
-            "https://ww1.sinaimg.cn/large/663d3650gy1fq66vvsr72j20p00gogo2.jpg" // 404
-        }
-      ],
+      bannerList: [],
       data:[],
       curClass:0, // 当前分类
     };
@@ -106,6 +90,10 @@ export default {
       //商品
       $.get(`/api/categories/${this.classifyId}`).then(response => {
         this.data = response.data&&response.data.categoryList;
+      });
+      //banner列表
+      $.get("/api/banners").then(response => {
+        this.bannerList = response.data && response.data.list;
       });
     },
     onItemClick() {

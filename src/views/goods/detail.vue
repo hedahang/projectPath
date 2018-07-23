@@ -11,15 +11,15 @@
     <!-- 商品信息 -->
     <div class="detail-info">
       <div class="info-top">
-        <span class="info-top-title ellitext">经典原味、芝士、香辣味薯片</span>
-        <b class="info-top-tag">满100减3元</b>
+        <span class="info-top-title ellitext">{{data.name}}</span>
+        <b v-if="data.discount_message" class="info-top-tag">{{data.discount_message}}</b>
       </div>
-      <p class="info-desc">非常棒的薯片</p>
-      <p class="info-sales">月销售2000份</p>
+      <p class="info-desc">{{data.description}}</p>
+      <p class="info-sales">月销售{{data.sales}}份</p>
       <div class="info-desc_footer">
-        <span class='price'>￥88</span>
+        <span class='price'>￥{{data.sale_price}}</span>
         <div class="info-desc_footer_number">
-          <inlineNumber :item="item"></inlineNumber>
+          <inlineNumber :item="data"></inlineNumber>
         </div>
       </div>
     </div>
@@ -42,15 +42,14 @@ import { Swiper, SwiperItem, XHeader, Badge } from "vux";
 import iconSearch from "@/assets/images/home_icon_search@2x.png";
 import iconPocket from "@/assets/images/recommend_btn_pocket@2x.png";
 import inlineNumber from "@/components/inline-number/index";
+import { util, request as $, cookie } from "@/utils/index";
 export default {
   name: "home",
   data() {
     return {
       iconSearch,
       iconPocket,
-      item: {
-        number: 0
-      },
+      goodsId: undefined, // 商品Id
       bannerList: [
         {
           url: "javascript:",
@@ -68,17 +67,17 @@ export default {
             "https://ww1.sinaimg.cn/large/663d3650gy1fq66vvsr72j20p00gogo2.jpg" // 404
         }
       ],
-       goodsList: [
-        {
-          image:
-            "http://ofjo26fgy.bkt.clouddn.com/21d87e11b15046bfb4a6f73af2c3b80e.jpg",
-          name: "薯片",
-          description: "非常棒的薯片",
-          sales: "2000",
-          sale_price: "8",
-          number: 999
-        },
-      ],
+      data: {
+        id: undefined,
+        category_id: undefined,
+        name: "",
+        description: "",
+        image: "",
+        sale_price: "1",
+        sales: 0,
+        keyword: "",
+        number:0,
+      }
     };
   },
   components: {
@@ -88,13 +87,19 @@ export default {
     inlineNumber,
     Badge
   },
+  created() {
+    // 分类id
+    let { id } = this.$route.query;
+    this.goodsId = id;
+    // 初始页面事件
+    this.getPageData();
+  },
   methods: {
-    onItemClick() {
-      console.log("123");
-    },
-    toSearch() {
-      //   console.log("123");
-      this.$router.push("/search");
+    getPageData() {
+      //商品
+      $.get(`/api/goods/${this.goodsId}`).then(response => {
+        this.data =Object.assign(this.data,response.data);
+      });
     }
   },
   computed: {

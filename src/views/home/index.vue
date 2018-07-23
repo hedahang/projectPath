@@ -12,23 +12,16 @@
     </x-header>
     <!-- 轮播 -->
     <swiper :aspect-ratio="300/750">
-      <swiper-item class="swiper-demo-img" v-for="(item, index) in bannerList" :key="index"><img style="width:100%" :src="item.img"></swiper-item>
+      <swiper-item class="swiper-demo-img" v-for="(item, index) in bannerList" :key="index"><a :href="item.redirect_url"><img style="width:100%" :src="item.image"></a></swiper-item>
     </swiper>
     <!-- 分类栏 -->
     <grid :show-lr-borders="false" :show-vertical-dividers="false">
       <grid-item v-for="item in classifyList" :key='item.id' :link="'/classify?id='+item.id" :label="item.name">
-        <img slot="icon" src="../../assets/images/home_btn_recommend@2x.png">
+        <img slot="icon" :src="item.image">
       </grid-item>
-      <!-- <grid-item :link="{ path: '/classify'}" label="零食">
-        <img slot="icon" src="../../assets/images/home_btn_snacks@2x.png">
-      </grid-item>
-      <grid-item link="/classify" @on-item-click="onItemClick">
-        <img slot="icon" src="../../assets/images/home_btn_cosmetics@2x.png">
-        <span slot="label">美妆</span>
-      </grid-item> -->
     </grid>
     <!-- 商品列表 -->
-    <goodsListC :list="goodsList"></goodsListC>
+    <goodsListC :list="goodsList.data"></goodsListC>
     <!-- 底部导航栏 -->
     <footerBar selected="home"></footerBar>
   </div>
@@ -57,34 +50,8 @@ export default {
     return {
       iconSearch: iconSearch,
       classifyList: [],
-      bannerList: [
-        {
-          url: "javascript:",
-          img:
-            "https://ww1.sinaimg.cn/large/663d3650gy1fq66vvsr72j20p00gogo2.jpg"
-        },
-        {
-          url: "javascript:",
-          img:
-            "https://ww1.sinaimg.cn/large/663d3650gy1fq66vw1k2wj20p00goq7n.jpg"
-        },
-        {
-          url: "javascript:",
-          img:
-            "https://ww1.sinaimg.cn/large/663d3650gy1fq66vvsr72j20p00gogo2.jpg" // 404
-        }
-      ],
-       goodsList: [
-        {
-          image:
-            "http://ofjo26fgy.bkt.clouddn.com/21d87e11b15046bfb4a6f73af2c3b80e.jpg",
-          name: "薯片",
-          description: "非常棒的薯片",
-          sales: "2000",
-          sale_price: "8",
-          number: 999
-        },
-      ],
+      bannerList: [],
+      goodsList: []
     };
   },
   components: {
@@ -102,8 +69,9 @@ export default {
     goodsListC
   },
   computed: {
-    classifyLink: function(id) {
-      return "zhangsww";
+    addNumber: function() {
+      let list = this.goodsList && this.goodsList.data;
+      return list;
     }
   },
   created() {
@@ -117,13 +85,28 @@ export default {
       $.get("/api/categories").then(response => {
         this.classifyList = response.data;
       });
-      
+      //首页商品列表
+      $.get("/api/goods").then(response => {
+        this.goodsList = response.data && response.data.list;
+        this.goodsList  && this.goodsList.data &&
+          this.goodsList.data.length !== 0 &&
+          this.goodsList.data.forEach(item => {
+            if (!item.number) {
+              this.$set(item, "number", 0);
+            }
+          });
+      });
+      //banner列表
+      $.get("/api/banners").then(response => {
+        console.log(response);
+        this.bannerList = response.data && response.data.list;
+      });
     },
     toSearch() {
       //   console.log("123");
       this.$router.push("/search");
     }
-  },
+  }
 };
 </script>
 

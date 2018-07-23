@@ -1,6 +1,6 @@
 <template>
   <div class="goods-list">
-        <a v-for="(item,index) in list" :key='index' class="goods-list-item" href="#/goods">
+        <a v-for="(item,index) in dealList" :key='index' class="goods-list-item" :href="item.id&&'#/goods?id='+item.id">
             <div class="item-lf">
                 <img :src="item.image" alt="">
             </div>
@@ -30,6 +30,18 @@ export default {
   },
   data() {
     return {};
+  },
+  computed: {
+    dealList: function() {
+      this.list &&
+        this.list.length !== 0 &&
+        this.list.forEach(item => {
+          if (!item.number) {
+            this.$set(item, "number", 0);
+          }
+        });
+      return this.list ||[];
+    }
   },
   components: {
     inlineNumber

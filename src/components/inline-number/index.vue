@@ -16,6 +16,7 @@
 import config from "@/config/index";
 import reduceNumber from "@/assets/images/home_btn_reduce@2x.png";
 import plusNumber from "@/assets/images/home_btn_plus@2x.png";
+import { util, request as $, cookie } from "@/utils/index";
 export default {
   props: {
     item: {
@@ -29,6 +30,7 @@ export default {
       plusNumber
     };
   },
+  created() {},
   methods: {
     /**
      * @method 增减单品数量
@@ -41,6 +43,11 @@ export default {
       } else if (!isAdd && num > 0) {
         this.$set(this.item, "number", --num);
       }
+      $.post(`/api/carts`, {
+        goods_id: [this.item.id]
+      }).then(response => {
+       console.log('add')
+      });
     }
   }
 };

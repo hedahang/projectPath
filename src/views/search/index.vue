@@ -3,7 +3,7 @@
     <x-header  class="search-header" :left-options="{backText: ''}" title="slot:overwrite-title" style="background-color:#FF5151;">
       <div class="overwrite-title-demo" slot="overwrite-title">
         <group gutter='0'>
-          <x-input title="" placeholder="请输入商品" @on-enter="handleSearch" >
+          <x-input title="" placeholder="请输入商品" @on-enter="handleSearch" v-model='formVal.q' >
             <img slot="label" style="padding-right:10px;display:block;" :src="iconSearch" width="16"
               height="16">
           </x-input>
@@ -12,7 +12,7 @@
       <span class="searchBtn" @click="handleSearch" slot="right">搜索</span>
     </x-header>
     <!-- 商品列表 -->
-    <goodsListC :list="goodsList"></goodsListC>
+    <goodsListC :list="goodsList.data"></goodsListC>
   </div>
 </template>
 
@@ -20,22 +20,17 @@
 import { XInput, Group, XHeader } from "vux";
 import goodsListC from "@/components/goodsList/index";
 import iconSearch from "@/assets/images/home_icon_search@2x.png";
+import { util, request as $, cookie } from "@/utils/index";
 export default {
   name: "search",
   data() {
     return {
       iconSearch: iconSearch,
-       goodsList: [
-        {
-          image:
-            "http://ofjo26fgy.bkt.clouddn.com/21d87e11b15046bfb4a6f73af2c3b80e.jpg",
-          name: "薯片",
-          description: "非常棒的薯片",
-          sales: "2000",
-          sale_price: "8",
-          number: 999
-        },
-      ],
+      goodsList: [],
+      formVal:{
+        q:'',
+        page: 1,
+      }
     };
   },
   components: {
@@ -45,8 +40,20 @@ export default {
     goodsListC
   },
   methods: {
+    getPageData(){
+      $.post("/api/goods/search",this.formVal).then(response => {
+        this.goodsList = response.data && response.data.list;
+        this.goodsList  && this.goodsList.data &&
+          this.goodsList.data.length !== 0 &&
+          this.goodsList.data.forEach(item => {
+            if (!item.number) {
+              this.$set(item, "number", 0);
+            }
+          });
+      });
+    },
     handleSearch() {
-      console.log("搜素");
+      this.getPageData();
     }
   },
   computed: {
