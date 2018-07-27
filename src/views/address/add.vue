@@ -5,12 +5,12 @@
     <div class="addAddress-list">
       <div class="addAddress-item ui acenter jbetween">
         <group class="item-group" style="width:100%">
-          <x-input title="联系人" required placeholder="姓名" :show-clear="true"></x-input>
+          <x-input title="联系人" v-model="formVal.name" required placeholder="姓名" :show-clear="true"></x-input>
         </group>
       </div>
       <div class="addAddress-item ui acenter jbetween">
         <group class="item-group" style="width:100%">
-          <x-input title="电话" name="mobile" keyboard="number" is-type="china-mobile" required placeholder="联系人电话" :show-clear="true"></x-input>
+          <x-input title="电话" v-model="formVal.mobile" name="mobile" keyboard="number" is-type="china-mobile" required placeholder="联系人电话" :show-clear="true"></x-input>
         </group>
       </div>
       <div class="addAddress-item ui acenter jbetween">
@@ -20,13 +20,13 @@
       </div>
       <div class="addAddress-item ui acenter jbetween">
         <group class="item-group" style="width:100%">
-          <x-input title="详细地址" required placeholder="请输入详细地址" :show-clear="true"></x-input>
+          <x-input title="详细地址" v-model="formVal.detailed_address" required placeholder="请输入详细地址" :show-clear="true"></x-input>
         </group>
       </div>
     </div>
     <!-- 确认 -->
     <div class="confirm">
-      <div class="confirm-box ui center">确认</div>
+      <div class="confirm-box ui center" @click="confirm">{{!editId?'确认':'修改'}}</div>
     </div>
   </div>
 </template>
@@ -40,6 +40,7 @@ import {
   XAddress,
   ChinaAddressV4Data
 } from "vux";
+import { util, request as $, cookie } from "@/utils/index";
 export default {
   name: "addAddress",
   data() {
@@ -47,7 +48,21 @@ export default {
       pageTitle: "新增地址",
       value: [],
       addressData: ChinaAddressV4Data,
-      showAddress: false
+      showAddress: false,
+      editId: undefined,
+      arrayId: [], // 地址id集合
+      arrayName: [], // 地址name集合
+      formVal: {
+        name: "",
+        mobile: "",
+        province_id: "",
+        province_name: "",
+        city_id: "",
+        city_name: "",
+        area_id: "",
+        area_name: "",
+        detailed_address: ""
+      }
     };
   },
   components: {
@@ -57,16 +72,84 @@ export default {
     Cell,
     XAddress
   },
-  created() {},
+  created() {
+    let id = this.$route.query.id;
+    this.editId = id;
+    if (!!this.editId) {
+      this.pageTitle = "修改地址";
+      this.getPageDetail();
+    }
+  },
   methods: {
-    logHide() {
-      console.log("logHide");
+    logHide(type) {
+      if (type) {
+        console.log(this.value);
+        this.formVal.province_id = this.arrayId[0];
+        this.formVal.city_id = this.arrayId[1];
+        this.formVal.area_id = this.arrayId[2];
+        this.formVal.province_name = this.arrayName[0];
+        this.formVal.city_name = this.arrayName[1];
+        this.formVal.area_name = this.arrayName[2];
+      }
     },
     logShow() {
       console.log("logShow");
     },
-    onShadowChange() {
-      console.log("onShadowChange");
+    onShadowChange(arrayId, arrayName) {
+      this.arrayId = arrayId;
+      this.arrayName = arrayName;
+    },
+    getPageDetail() {
+      $.get(`/api/addresses/${this.editId}`).then(response => {
+        console.log(response);
+        this.formVal = JSON.parse(JSON.stringify(response.data));
+        this.value = [
+          response.data.province_id + "",
+          response.data.city_id + "",
+          response.data.area_id + ""
+        ];
+        console.log(this.value);
+      });
+    },
+    confirm() {
+      console.log(this.formVal);
+      if (!this.formVal.name) {
+        this.$toast({
+          type: "text",
+          text: "请输入联系人",
+          width: "120px"
+        });
+        return;
+      }
+      if (!/^1\d{10}$/.test(this.formVal.mobile)) {
+        this.$toast({
+          text: "请输入正确电话",
+          width: "140px"
+        });
+        return;
+      }
+      if (!this.formVal.province_id) {
+        this.$toast({
+          text: "请选择地区",
+          width: "140px"
+        });
+        return;
+      }
+      if (!this.formVal.detailed_address) {
+        this.$toast({
+          text: "请输入详细地址",
+          width: "140px"
+        });
+        return;
+      }
+      let method = this.editId ? "put" : "post";
+      let url = this.editId ? "/api/addresses/"+this.editId : "/api/addresses";
+
+      $.request({ method, url, data: this.formVal }).then(
+        response => {
+          this.$router.go(-1);
+        }
+      );
     }
   },
   computed: {
@@ -95,7 +178,7 @@ export default {
     .addAddress-item {
       font-size: 15px;
       border-bottom: 1px solid #e0e0e0;
-      &:last-child{
+      &:last-child {
         border-bottom: none;
       }
       .item-group {
@@ -143,7 +226,7 @@ export default {
             font-size: 15px;
           }
         }
-        &.addr{
+        &.addr {
           .weui-cell__ft {
             height: 24px;
             padding-right: 20px;

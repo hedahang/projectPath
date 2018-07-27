@@ -76,7 +76,7 @@ export default {
         sale_price: "1",
         sales: 0,
         keyword: "",
-        number:0,
+        qty:0,
       }
     };
   },

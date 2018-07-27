@@ -24,7 +24,7 @@
             <p class="item-rt_sales">月销售{{item.sales}}份</p>
             <div class="item_rt_footer">
               <span class='price'>￥{{item.price}}</span>
-              <div class="item_rt_footer_number">x{{item.number}}</div>
+              <div class="item_rt_footer_number">x{{item.qty}}</div>
             </div>
           </div>
         </div>
@@ -98,7 +98,7 @@ export default {
           desc: "非常棒的薯片",
           sales: "2000",
           price: "8",
-          number: 8
+          qty: 8
         },
         {
           img:
@@ -107,7 +107,7 @@ export default {
           desc: "非常棒的薯片",
           sales: "2000",
           price: "8",
-          number: 8
+          qty: 8
         },
         {
           img:
@@ -116,7 +116,7 @@ export default {
           desc: "非常棒的薯片",
           sales: "2000",
           price: "8",
-          number: 8
+          qty: 8
         }
       ],
       value1: [],

@@ -53,6 +53,7 @@ import {
 } from "vux";
 import footerBar from "@/components/footerBar/index";
 import goodsListC from "@/components/goodsList/index";
+import { util, request as $, cookie } from "@/utils/index";
 export default {
   name: "home",
   data() {
@@ -60,7 +61,7 @@ export default {
       pageTitle: "口袋",
       headerRight: "编辑",
       edit: false,
-       goodsList: [
+      goodsList: [
         {
           image:
             "http://ofjo26fgy.bkt.clouddn.com/21d87e11b15046bfb4a6f73af2c3b80e.jpg",
@@ -68,9 +69,9 @@ export default {
           description: "非常棒的薯片",
           sales: "2000",
           sale_price: "8",
-          number: 999
-        },
-      ],
+          qty: 999
+        }
+      ]
     };
   },
   components: {
@@ -88,8 +89,25 @@ export default {
     Divider,
     goodsListC
   },
-  created() {},
+  created() {
+    this.getPageData();
+  },
   methods: {
+    getPageData() {
+      //购物车列表
+      $.get("/api/carts").then(response => {
+        this.goodsList = response.data && response.data.list;
+        this.goodsList &&
+          this.goodsList.length !== 0 &&
+          this.goodsList.forEach(item => {
+            if (!item.qty) {
+              this.$set(item, "qty", 0);
+            }else{
+              this.$set(item, "qty", item.qty);
+            }
+          });
+      });
+    },
     changeEdit() {
       this.edit = !this.edit;
       this.headerRight = this.headerRight == "编辑" ? "完成" : "编辑";

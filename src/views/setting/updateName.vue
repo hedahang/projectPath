@@ -7,26 +7,27 @@
       <div class="setting-list">
         <div class="row ui acenter jbetween">
           <group class="updateName" style="width:100%">
-            <x-input title="" required placeholder="请输入昵称" :show-clear="true"></x-input>
+            <x-input title="" v-model='username' required placeholder="请输入昵称" :show-clear="true"></x-input>
           </group>
         </div>
       </div>
     </div>
     <!-- 确认 -->
     <div class="confirm">
-      <div class="confirm-box ui center">确认</div>
+      <div class="confirm-box ui center" @click="confirm">确认</div>
     </div>
   </div>
 </template>
 
 <script>
 import { XHeader, XInput, Group, Cell } from "vux";
+import { util, request as $, cookie } from "@/utils/index";
 export default {
   name: "updateName",
   data() {
     return {
       pageTitle: "修改昵称",
-      name: "海是倒过来的天"
+      username: "海是倒过来的天"
     };
   },
   components: {
@@ -36,12 +37,19 @@ export default {
     Cell
   },
   created() {},
-  methods: {},
-  computed: {
-    getName: function() {
-      return "zhangsww";
+  methods: {
+    confirm() {
+      if (!!this.username) {
+        $.put("/api/user", {
+          name: this.username
+        }).then(response => {
+          this.$toast('修改成功');
+          cookie.set('windice_username',response.data&&response.data.name)
+        });
+      }
     }
-  }
+  },
+  computed: {}
 };
 </script>
 

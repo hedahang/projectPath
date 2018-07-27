@@ -35,7 +35,6 @@ export default {
   },
   methods: {
     toLogin() {
-      console.log(this.mobile);
       if (this.mobile == "" || !this.mobile) {
         this.$vux.toast.text("手机号不能为空", "middle");
       } else if (this.password == "" || !this.password) {
@@ -46,7 +45,7 @@ export default {
           password: this.password
         }).then(res => {
           if (res.status) {
-            cookie.set("token", res.data && res.data.token);
+            cookie.set("windice_token", res.data && res.data.token);
             this.$router.replace("home");
           }
         });

@@ -3,25 +3,14 @@
     <x-header class="home-header header-bar" :left-options="{backText: ''}" :title="pageTitle" style="background-color:#FF5151;">
     </x-header>
     <div class="coupon-list">
-      <div class="coupon-item ui">
+      <div v-for="(item,index) in data" :key='index' :class="{'coupon-item ui':true,'overdue':item.usable}" >
         <div class="lf ui center">
-          <span class="price">2</span>
-          <p class="desc ellitext">满50减2元</p>
+          <span class="price">{{item.discount}}</span>
+          <p class="desc ellitext">{{item.description}}</p>
         </div>
         <div class="rt">
-          <p class="name ellitext">零食优惠券</p>
-          <p class="date">2018.04.01-2018.05.01</p>
-          <p class='desc'>使用条件</p>
-        </div>
-      </div>
-      <div class="coupon-item ui overdue">
-        <div class="lf ui center">
-          <span class="price">2</span>
-          <p class="desc ellitext">满50减2元</p>
-        </div>
-        <div class="rt">
-          <p class="name ellitext">零食优惠券</p>
-          <p class="date">2018.04.01-2018.05.01</p>
+          <p class="name ellitext">{{item.description}}</p>
+          <p class="date">{{item.begin_at|formatDate}} - {{item.end_at|formatDate}}</p>
           <p class='desc'>使用条件</p>
         </div>
       </div>
@@ -31,18 +20,37 @@
 
 <script>
 import { XHeader } from "vux";
+import { util, request as $, cookie } from "@/utils/index";
+import config from "@/config/index";
 export default {
   name: "home",
   data() {
     return {
+      couponStatus:config.couponStatus,
       pageTitle: "优惠券",
+      data:[],
     };
   },
   components: {
     XHeader
   },
-  created() {},
-  methods: {
+  filters:{
+      formatDate(val){
+        return val.slice(0,10).replace(/-/g,'.')
+      }
+    },
+  created() {
+    this.getPageData();
+  },
+  methods: { 
+    getPageData() {
+      this.$vux.loading.show();
+      //我的商品列表
+      $.get("/api/coupons").then(response => {
+        this.data = response.data && response.data.list;
+        this.$vux.loading.hide();
+      });
+    },
   },
   computed: {
     getName: function() {

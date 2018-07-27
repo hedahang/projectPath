@@ -72,7 +72,7 @@ export default {
       $.post("/api/register", { mobile: this.mobile,password:this.password,code:this.code }).then(res => {
         if (res.status) {
           cookie.set('w_mobile',res.data&&res.data.mobile)
-          cookie.set('token',res.data&&res.data.token)
+          cookie.set('windice_token',res.data&&res.data.token)
           this.$router.replace('home')
         }
       });

@@ -46,8 +46,8 @@ export default {
         this.goodsList  && this.goodsList.data &&
           this.goodsList.data.length !== 0 &&
           this.goodsList.data.forEach(item => {
-            if (!item.number) {
-              this.$set(item, "number", 0);
+            if (!item.qty) {
+              this.$set(item, "qty", 0);
             }
           });
       });

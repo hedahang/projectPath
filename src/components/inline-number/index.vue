@@ -1,10 +1,10 @@
 <template>
   <div class="inline-number">
     <div>
-      <a v-if="!(item.number == 0)" class="number-selector number-selector-sub" @click.stop.prevent="changeQty(false)">
+      <a v-if="!(item.qty == 0)" class="number-selector number-selector-sub" @click.stop.prevent="changeQty(false)">
         <img :src="reduceNumber" alt="">
       </a>
-      <input v-if="!(item.number == 0)" readonly="readonly" v-model="item.number" pattern="[0-9]*" type="number" class="number-input" style="width: 37px;">
+      <input v-if="!(item.qty == 0)" readonly="readonly" v-model="item.qty" pattern="[0-9]*" type="number" class="number-input" style="width: 37px;">
       <a class="number-selector number-selector-plus" @click.stop.prevent="changeQty(true)">
         <img :src="plusNumber" alt="">
       </a>
@@ -21,7 +21,7 @@ export default {
   props: {
     item: {
       type: Object,
-      default: { number: 0 }
+      default: { qty: 0 }
     }
   },
   data() {
@@ -37,17 +37,18 @@ export default {
      * @param {Boolean} isAdd 是否增加
      */
     changeQty: function(isAdd) {
-      var num = this.item.number;
+      var num = this.item.qty;
       if (isAdd && num < config.maxGoodsNum) {
-        this.$set(this.item, "number", ++num);
+        this.$set(this.item, "qty", ++num);
+        $.post(`/api/carts`, {
+          goods: [{ id: this.item.id, qty: 1 }]
+        });
       } else if (!isAdd && num > 0) {
-        this.$set(this.item, "number", --num);
+        this.$set(this.item, "qty", --num);
+        $.put(`/api/carts`, {
+          goods: [{ row_id: this.item.id, qty: this.item.qty }]
+        });
       }
-      $.post(`/api/carts`, {
-        goods_id: [this.item.id]
-      }).then(response => {
-       console.log('add')
-      });
     }
   }
 };

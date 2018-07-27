@@ -15,8 +15,8 @@ const service = axios.create({
 
 // request拦截器
 service.interceptors.request.use(config => {
-    if (cookie.get('token')) {
-        config.headers['Authorization'] = `Bearer ${cookie.get('token')}` // 让每个请求携带token-- ['X-Token']为自定义key 请根据实际情况自行修改
+    if (cookie.get('windice_token')) {
+        config.headers['Authorization'] = `Bearer ${cookie.get('windice_token')}` // 让每个请求携带token-- ['X-Token']为自定义key 请根据实际情况自行修改
     }
     return config
 }, error => {

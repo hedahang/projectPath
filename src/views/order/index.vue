@@ -7,12 +7,12 @@
         <div class="goods-list">
             <a v-for="(item,index) in goodsList" :key='index' class="goods-list-item" href="#/goods">
                 <div class="item-lf">
-                    <img :src="item.img" alt="">
+                    <img :src="item.image&&item.image[0]" alt="">
                 </div>
                 <div class="item-rt">
                     <h4 class="item-rt_title ui jbetween">
-                        <span class='ellitext'>{{item.title}}</span>
-                        <span class="status">已完成</span>
+                        <span class='ellitext'>{{item.name}}</span>
+                        <span class="status">{{orderStatus[item.status]}}</span>
                     </h4>
                     <p class="item-rt_desc">{{item.desc}}</p>
                     <p class="item-rt_sales">月销售{{item.sales}}份</p>
@@ -42,23 +42,16 @@ import {
 } from "vux";
 import footerBar from "@/components/footerBar/index";
 import goodsListC from "@/components/goodsList/index";
+import { util, request as $, cookie } from "@/utils/index";
+import config from "@/config/index";
 export default {
   name: "home",
   data() {
     return {
+      orderStatus:config.orderStatus,
       pageTitle: "我的订单",
       edit: false,
-       goodsList: [
-        {
-          image:
-            "http://ofjo26fgy.bkt.clouddn.com/21d87e11b15046bfb4a6f73af2c3b80e.jpg",
-          name: "薯片",
-          description: "非常棒的薯片",
-          sales: "2000",
-          sale_price: "8",
-          number: 999
-        },
-      ],
+      goodsList: []
     };
   },
   components: {
@@ -76,8 +69,27 @@ export default {
     Divider,
     goodsListC
   },
-  created() {},
+  created() {
+    this.getPageData();
+  },
   methods: {
+    getPageData() {
+      this.$vux.loading.show();
+      //我的商品列表
+      $.get("/api/orders").then(response => {
+        this.goodsList = response.data && response.data.list;
+        this.goodsList &&
+          this.goodsList.data &&
+          this.goodsList.data.length !== 0 &&
+          this.goodsList.data.forEach(item => {
+            if (!item.qty) {
+              this.$set(item, "qty", 0);
+            }
+          });
+        console.log(this.goodsList);
+        this.$vux.loading.hide();
+      });
+    },
     changeEdit() {
       this.edit = !this.edit;
       this.headerRight = this.headerRight == "编辑" ? "完成" : "编辑";

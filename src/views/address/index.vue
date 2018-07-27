@@ -3,41 +3,22 @@
     <x-header class="home-header header-bar" :left-options="{backText: ''}" :title="pageTitle" style="background-color:#FF5151;">
     </x-header>
     <div class="address-list">
-      <div class="address-item">
+      <div v-for="(item,index) in list" :key='index'  class="address-item">
         <div class="top">
           <div class="ui">
-            <span class="name ellitext">佚名</span>
-            <span class="mobile">177****0000</span>
+            <span class="name ellitext">{{item.name}}</span>
+            <span class="mobile">{{item.mobile|formatMobile}}</span>
           </div>
-          <p class="addr ellitext">西南交通大学</p>
+          <p class="addr ellitext">{{item.province_name+item.city_name+item.city_name+item.detailed_address}}</p>
         </div>
         <div class="bottom ui jbetween">
-          <div class="lf ui acenter">
-            <span class='checked'></span>
+          <div class="lf ui acenter" @click="setDefaultAddr(item)">
+            <span :class='{"checked":item.is_default == 1}'></span>
             <p>默认地址</p>
           </div>
           <div class="rt ui">
-            <span class="edit">编辑</span>
-            <span class="del">删除</span>
-          </div>
-        </div>
-      </div>
-      <div class="address-item">
-        <div class="top">
-          <div class="ui">
-            <span class="name ellitext">佚名</span>
-            <span class="mobile">177****0000</span>
-          </div>
-          <p class="addr ellitext">西南交通大学</p>
-        </div>
-        <div class="bottom ui jbetween">
-          <div class="lf ui acenter">
-            <span class=''></span>
-            <p>设为默认</p>
-          </div>
-          <div class="rt ui">
-            <span class="edit">编辑</span>
-            <span class="del">删除</span>
+            <span class="edit" @click="handleEdit(item)">编辑</span>
+            <span class="del" @click="handleDel(item)">删除</span>
           </div>
         </div>
       </div>
@@ -52,18 +33,55 @@
 
 <script>
 import { XHeader } from "vux";
+import { util, request as $, cookie } from "@/utils/index";
 export default {
-  name: "address",
+  name: "addresspage",
   data() {
     return {
-      pageTitle: "收货地址"
+      pageTitle: "收货地址",
+      list: []
     };
   },
   components: {
     XHeader
   },
-  created() {},
-  methods: {},
+  filters: {
+    formatMobile(val) {
+      return val.slice(0, 3)+'****'+val.slice(7, 11);
+    }
+  },
+  created() {
+    this.getPageData();
+  },
+  methods: {
+    getPageData() {
+      this.$vux.loading.show();
+      //我的商品列表
+      $.get("/api/addresses").then(response => {
+        this.list = response.data && response.data.list;
+        this.$vux.loading.hide();
+      });
+    },
+    // 编辑 
+    handleEdit(item){
+      this.$router.push(`/address/add?id=${item.id}`)
+    },
+    // 删除
+    handleDel(item){
+       $.delete(`/api/addresses/${item.id}`).then(response => {
+        this.$toast("删除成功");
+        this.getPageData()
+      });
+    },
+    // 设为默认地址
+    setDefaultAddr(item){
+      $.put("/api/addresses/"+item.id,{is_default:1}).then(
+        response => {
+          this.getPageData();
+        }
+      );
+    }
+  },
   computed: {
     getName: function() {
       return "zhangsww";
@@ -171,15 +189,15 @@ export default {
     right: 0px;
     bottom: 0px;
     background-color: #fff;
-    color: #FF5151;
+    color: #ff5151;
     font-size: 18px;
     height: 44px;
-    img{
+    img {
       width: 18px;
       height: 18px;
       display: block;
     }
-    span{
+    span {
       margin-left: 10px;
     }
   }

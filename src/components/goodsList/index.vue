@@ -36,8 +36,8 @@ export default {
       this.list &&
         this.list.length !== 0 &&
         this.list.forEach(item => {
-          if (!item.number) {
-            this.$set(item, "number", 0);
+          if (!item.qty) {
+            this.$set(item, "qty", 0);
           }
         });
       return this.list ||[];

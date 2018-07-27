@@ -11,7 +11,7 @@
           </div>
           <div class="rt icon-right">
             <vue-core-image-upload class="btn btn-primary" :crop="false" @imageuploaded="imageuploaded" :data="data" :max-file-size="5242880"
-              url="http://101.198.151.190/api/upload.php">
+              :url="baseUrl" :headers='setHeaders'>
               <img width="40" height="40" :src="src" />
             </vue-core-image-upload>
           </div>
@@ -26,20 +26,20 @@
         </router-link>
       </div>
       <div class="setting-list" style="margin-top:10px;">
-        <router-link to="/setMobile" class="row ui acenter jbetween">
+        <router-link to="" class="row ui acenter jbetween">
           <div class="lf ui acenter">
-            <span class='lf-text'>绑定手机</span>
+            <span class='lf-text'>手机</span>
           </div>
-          <div class="rt icon-right">
+          <div class="rt ">
             <span class="gray">{{mobile}}</span>
           </div>
         </router-link>
       </div>
     </div>
     <!-- 退出登录 -->
-    <div class="outLogin">
+    <!-- <div class="outLogin">
         <div class="outLogin-box ui center">退出当前登录</div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -47,16 +47,19 @@
 import { XHeader } from "vux";
 import VueCoreImageUpload from "vue-core-image-upload";
 import footerBar from "@/components/footerBar/index";
+import { util, request as $, cookie } from "@/utils/index";
 export default {
   name: "home",
   data() {
     return {
+      baseUrl: process.env.BASE_API + "/api/user/upload",
+      setHeaders:{'Authorization':`Bearer ${cookie.get('windice_token')}`},
       pageTitle: "设置",
       src:
         "http://img1.vued.vanthink.cn/vued0a233185b6027244f9d43e653227439a.png",
       name: "海是倒过来的天",
       mobile: 13000000000,
-      data:null
+      data:null,
     };
   },
   components: {
