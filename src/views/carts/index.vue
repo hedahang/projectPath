@@ -8,7 +8,7 @@
         <aside class="goods-lf">
             <ul>
                 <li v-for="(item,index) in goodsList" :key='index' class="ui center">
-                    <span></span>
+                    <span :class='{"checked":item.checked}' @click="handGoodsChecked(item,index)"></span>
                 </li>
             </ul>
         </aside>
@@ -20,16 +20,16 @@
     <!-- 结算栏 -->
     <div class="balance ui jbetween">
         <div class="lf f1 ui acenter">
-            <span class="checkAll checked"></span>
+            <span @click="handleCheckedAll" :class="{'checkAll':true,'checked':isAllChecked}"></span>
             <span class="checkAllText">全选</span>
             <p v-show="!edit" class="total">
                 <span class="totalText">合计:</span>
-                <span class="totalPrice">￥8.00</span>
+                <span class="totalPrice">￥{{allPrice}}</span>
             </p>
         </div>
         <div class="rt fshrink">
-            <span v-show="!edit" class="toBalance">去结算</span>
-            <span v-show="edit" class="delete">删除</span>
+            <span v-show="!edit" class="toBalance" @click="toSubmitOrder">去结算</span>
+            <span v-show="edit" class="delete" @click="delGoods">删除</span>
         </div>
     </div>
     <!-- 底部导航栏 -->
@@ -61,6 +61,8 @@ export default {
       pageTitle: "口袋",
       headerRight: "编辑",
       edit: false,
+      allPrice: 0,
+      isAllChecked: false, // 是否全选
       goodsList: [
         {
           image:
@@ -69,7 +71,8 @@ export default {
           description: "非常棒的薯片",
           sales: "2000",
           sale_price: "8",
-          qty: 999
+          qty: 999,
+          checked: false
         }
       ]
     };
@@ -93,6 +96,87 @@ export default {
     this.getPageData();
   },
   methods: {
+    // 切换选中商品
+    handGoodsChecked(item, index) {
+      if (item.checked) {
+        item.checked = false; // 取消选中
+        this.isAllChecked = false;
+      } else {
+        item.checked = true; // 选中
+        this.isAllChecked = true;
+        this.goodsList &&
+          this.goodsList.length !== 0 &&
+          this.goodsList.forEach(item => {
+            if (!item.checked) {
+              this.isAllChecked = false;
+            }
+          });
+      }
+      this.totalPrice();
+    },
+    // 切换全选
+    handleCheckedAll() {
+      if (this.isAllChecked) {
+        this.isAllChecked = false;
+      } else {
+        this.isAllChecked = true;
+      }
+      this.goodsList &&
+        this.goodsList.length !== 0 &&
+        this.goodsList.forEach(item => {
+          item.checked = this.isAllChecked;
+        });
+      this.totalPrice();
+    },
+    // 计算总价
+    totalPrice() {
+      this.allPrice = 0;
+      this.goodsList &&
+        this.goodsList.length !== 0 &&
+        this.goodsList.forEach(item => {
+          if (item.checked) {
+            this.allPrice =
+              (this.allPrice * 100 + item.sale_price * item.qty * 100) / 100;
+          }
+        });
+    },
+    // 删除商品
+    delGoods() {
+      let row_id = [];
+      this.goodsList &&
+        this.goodsList.length !== 0 &&
+        this.goodsList.forEach(item => {
+          if (item.checked) {
+            row_id.push(item.row_id);
+          }
+        });
+      if (row_id && row_id.length !== 0) {
+        $.delete("/api/carts", row_id).then(rs => {
+          this.getPageData();
+        });
+      }
+    },
+    // 去结算
+    toSubmitOrder() {
+      let payGoods = []; // 提交订单数组
+      this.goodsList &&
+        this.goodsList.length !== 0 &&
+        this.goodsList.forEach(item => {
+          if (item.checked) {
+            payGoods.push(item.row_id);
+          }
+        });
+      console.log(payGoods);
+      if (payGoods && payGoods.length !== 0) {
+        cookie.set("payGoods", payGoods.join(","));
+        this.$router.push("/submitOrder");
+      } else {
+        this.$toast({
+          text: "没有选中的商品",
+          width: "140px"
+        });
+      }
+    },
     getPageData() {
       //购物车列表
       $.get("/api/carts").then(response => {
@@ -100,9 +184,10 @@ export default {
         this.goodsList &&
           this.goodsList.length !== 0 &&
           this.goodsList.forEach(item => {
+            this.$set(item, "checked", false);
             if (!item.qty) {
               this.$set(item, "qty", 0);
-            }else{
+            } else {
               this.$set(item, "qty", item.qty);
             }
           });

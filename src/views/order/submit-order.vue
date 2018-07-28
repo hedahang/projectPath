@@ -1,6 +1,6 @@
 <template>
   <div class="submit-order">
-    <div class="userInfo ui acenter">
+    <router-link to="/address" class="userInfo ui acenter" >
       <div class="lf f1">
         <div class="top">
           <span class='username'>佚名</span>
@@ -11,7 +11,7 @@
       <div class="rt fshrink">
         <img src="../../assets/images/my_btn_next@2x.png" alt="">
       </div>
-    </div>
+    </router-link>
     <div class="box">
       <div class="box-list">
         <div class="box-item" v-for="(item,index) in list" :key='index'>
@@ -86,6 +86,7 @@
 import { Group, PopupPicker, Popup, TransferDom } from "vux";
 import iconSearch from "@/assets/images/home_icon_search@2x.png";
 import iconPocket from "@/assets/images/recommend_btn_pocket@2x.png";
+import { util, request as $, cookie } from "@/utils/index";
 export default {
   name: "submitOrder",
   data() {
@@ -120,7 +121,8 @@ export default {
         }
       ],
       value1: [],
-      showPopup: false
+      showPopup: false,
+      row_id: []
     };
   },
   directives: {
@@ -131,7 +133,18 @@ export default {
     Group,
     Popup
   },
+  created() {
+    let payGoods = cookie.get("payGoods");
+    this.row_id = payGoods && payGoods.split(",");
+    this.getPageData();
+  },
   methods: {
+    getPageData() {
+      //商品列表
+      $.get("/api/carts/confirm", { row_id: this.row_id }).then(response => {
+        console.log(response);
+      });
+    },
     // 打开支付弹框
     switchPayModal(type) {
       if (type == "open") {
