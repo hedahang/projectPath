@@ -2,26 +2,32 @@
   <div class="my-order container">
     <x-header class="home-header header-bar" :left-options="{backText: ''}" :title="pageTitle" style="background-color:#FF5151;">
     </x-header>
+    <!-- 订单分类 -->
+    <div class="order-nav">
+      <tab v-model="status" prevent-default @on-before-index-change="switchTabItem">
+        <tab-item v-for="(item,index) in statusList" :key="index">{{ item }}</tab-item>
+      </tab>
+    </div>
     <!-- 订单商品列表 -->
     <div class="goods-box">
-        <div class="goods-list">
-            <a v-for="(item,index) in goodsList" :key='index' class="goods-list-item" href="#/goods">
-                <div class="item-lf">
-                    <img :src="item.image&&item.image[0]" alt="">
-                </div>
-                <div class="item-rt">
-                    <h4 class="item-rt_title ui jbetween">
-                        <span class='ellitext'>{{item.name}}</span>
-                        <span class="status">{{orderStatus[item.status]}}</span>
-                    </h4>
-                    <p class="item-rt_desc">{{item.desc}}</p>
-                    <p class="item-rt_sales">月销售{{item.sales}}份</p>
-                    <div class="item_rt_footer">
-                        <span class='price'>￥{{item.price}}</span>
-                    </div>
-                </div>
-            </a>
-        </div>
+      <div class="goods-list">
+        <a v-for="(item,index) in goodsList" :key='index' class="goods-list-item" href="#/goods">
+          <div class="item-lf">
+            <img :src="item.image&&item.image[0]" alt="">
+          </div>
+          <div class="item-rt">
+            <h4 class="item-rt_title ui jbetween">
+              <span class='ellitext'>{{item.name}}</span>
+              <span class="status">{{orderStatus[item.status]}}</span>
+            </h4>
+            <p class="item-rt_desc">{{item.desc}}</p>
+            <p class="item-rt_sales">月销售{{item.sales}}份</p>
+            <div class="item_rt_footer">
+              <span class='price'>￥{{item.price}}</span>
+            </div>
+          </div>
+        </a>
+      </div>
     </div>
   </div>
 </template>
@@ -38,7 +44,9 @@ import {
   ButtonTab,
   ButtonTabItem,
   XHeader,
-  Divider
+  Divider,
+  Tab,
+  TabItem
 } from "vux";
 import footerBar from "@/components/footerBar/index";
 import goodsListC from "@/components/goodsList/index";
@@ -48,10 +56,12 @@ export default {
   name: "home",
   data() {
     return {
-      orderStatus:config.orderStatus,
+      orderStatus: config.orderStatus,
       pageTitle: "我的订单",
       edit: false,
-      goodsList: []
+      goodsList: [],
+      status:0, // 状态，0-全部，1-未付款，2-已付款，3-未发货，4-已发货，5-交易完成，6-交易关闭
+      statusList:["全部",'未付款','已付款','已付款','未发货','已发货','交易完成','交易关闭']
     };
   },
   components: {
@@ -67,6 +77,8 @@ export default {
     GroupTitle,
     footerBar,
     Divider,
+    Tab,
+    TabItem,
     goodsListC
   },
   created() {
@@ -89,6 +101,17 @@ export default {
         console.log(this.goodsList);
         this.$vux.loading.hide();
       });
+    },
+    // 切换状态
+    switchTabItem(index){
+      console.log('on-before-index-change', index)
+      this.$vux.loading.show({
+        text: 'loading'
+      })
+      setTimeout(() => {
+        this.$vux.loading.hide()
+        this.status = index
+      }, 1000)
     },
     changeEdit() {
       this.edit = !this.edit;
