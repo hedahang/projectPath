@@ -1,12 +1,8 @@
 <template>
   <div class="submit-order">
-<<<<<<< HEAD
     <x-header class="home-header header-bar" :left-options="{backText: ''}" title="确认订单" style="background-color:#FF5151;">
     </x-header>
     <router-link class="userInfo ui acenter" to="/address">
-=======
-    <router-link to="/address" class="userInfo ui acenter" >
->>>>>>> a2c871fded75956a6976550b50e78c94959e2918
       <div class="lf f1">
         <div class="top">
           <span class='username'>{{defaultAddr.name}}</span>
