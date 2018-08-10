@@ -1,8 +1,12 @@
 <template>
   <div class="submit-order">
+<<<<<<< HEAD
     <x-header class="home-header header-bar" :left-options="{backText: ''}" title="确认订单" style="background-color:#FF5151;">
     </x-header>
     <router-link class="userInfo ui acenter" to="/address">
+=======
+    <router-link to="/address" class="userInfo ui acenter" >
+>>>>>>> a2c871fded75956a6976550b50e78c94959e2918
       <div class="lf f1">
         <div class="top">
           <span class='username'>{{defaultAddr.name}}</span>
@@ -137,7 +141,8 @@ export default {
         }
       ],
       value1: [],
-      showPopup: false
+      showPopup: false,
+      row_id: []
     };
   },
   directives: {
@@ -158,6 +163,11 @@ export default {
     // 初始页面数据
     this.getPageData();
   },
+  created() {
+    let payGoods = cookie.get("payGoods");
+    this.row_id = payGoods && payGoods.split(",");
+    this.getPageData();
+  },
   methods: {
     getPageData() {
       //获取默认地址
@@ -168,6 +178,10 @@ export default {
             this.defaultAddr = item;
           }
         })
+      });
+      //商品列表
+      $.get("/api/carts/confirm", { row_id: this.row_id }).then(response => {
+        console.log(response);
       });
     },
     // 打开支付弹框
