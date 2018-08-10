@@ -21,7 +21,7 @@
       </grid-item>
     </grid>
     <!-- 商品列表 -->
-    <goodsListC :list="goodsList.data"></goodsListC>
+    <goodsListC :list="goodsList"></goodsListC>
     <!-- 底部导航栏 -->
     <footerBar selected="home"></footerBar>
   </div>
@@ -87,7 +87,7 @@ export default {
       });
       //首页商品列表
       $.get("/api/goods").then(response => {
-        this.goodsList = response.data && response.data.list;
+        this.goodsList = response.data && response.data.data;
         this.goodsList  && this.goodsList.data &&
           this.goodsList.data.length !== 0 &&
           this.goodsList.data.forEach(item => {
@@ -95,6 +95,7 @@ export default {
               this.$set(item, "qty", 0);
             }
           });
+          console.log(this.goodsList)
       });
       //banner列表
       $.get("/api/banners").then(response => {

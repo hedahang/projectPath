@@ -4,8 +4,8 @@
     </x-header>
     <!-- 轮播 -->
     <swiper :aspect-ratio="400/750">
-      <swiper-item class="swiper-demo-img" v-for="(item, index) in bannerList" :key="index">
-        <img style="width:100%" :src="item.img">
+      <swiper-item class="swiper-demo-img" v-for="(item, index) in data.image" :key="index">
+        <img style="width:100%" :src="item">
       </swiper-item>
     </swiper>
     <!-- 商品信息 -->
@@ -26,11 +26,11 @@
     <!-- 购物车栏 -->
     <div class="detail-shop">
         <div class="shop-lf">
-            <div class="icon-shop">
+            <a class="icon-shop" href="#/carts">
                 <img :src="iconPocket" alt="">
-                <badge class="shopBadge" text="8"></badge>
-            </div>
-            <div class="shop-price">￥12.9</div>
+                <badge class="shopBadge" :text="getGoodsNum.num"></badge>
+            </a>
+            <div class="shop-price">￥{{getGoodsNum.price}}</div>
         </div>
         <a class="shop-rt" href="#/submitOrder">结算</a>
     </div>
@@ -50,33 +50,17 @@ export default {
       iconSearch,
       iconPocket,
       goodsId: undefined, // 商品Id
-      bannerList: [
-        {
-          url: "javascript:",
-          img:
-            "https://ww1.sinaimg.cn/large/663d3650gy1fq66vvsr72j20p00gogo2.jpg"
-        },
-        {
-          url: "javascript:",
-          img:
-            "https://ww1.sinaimg.cn/large/663d3650gy1fq66vw1k2wj20p00goq7n.jpg"
-        },
-        {
-          url: "javascript:",
-          img:
-            "https://ww1.sinaimg.cn/large/663d3650gy1fq66vvsr72j20p00gogo2.jpg" // 404
-        }
-      ],
+      cartList: [], // 购物车
       data: {
         id: undefined,
         category_id: undefined,
         name: "",
         description: "",
-        image: "",
+        image: [],
         sale_price: "1",
         sales: 0,
         keyword: "",
-        qty:0,
+        qty: 0
       }
     };
   },
@@ -98,13 +82,32 @@ export default {
     getPageData() {
       //商品
       $.get(`/api/goods/${this.goodsId}`).then(response => {
-        this.data =Object.assign(this.data,response.data);
+        this.data = Object.assign(this.data, response.data && response.data[0]);
+      });
+      // 获取购物车数据
+      $.get("/api/carts").then(response => {
+        this.cartList = response.data && response.data.list;
       });
     }
   },
   computed: {
-    getName: function() {
-      return "zhangsww";
+    getGoodsNum: function() {
+      let num = 0;
+      let price = 0;
+      this.cartList &&
+        this.cartList.length !== 0 &&
+        this.cartList.forEach(item => {
+          if (item.id == this.data.id) {
+            num += parseInt(this.data.qty);
+            price += parseFloat(item.sale_price)*100*parseInt(this.data.qty)/100;
+          } else {
+            if (!!item.qty) {
+              num += parseInt(item.qty);
+              price += parseFloat(item.sale_price)*100*parseInt(item.qty)/100;
+            }
+          }
+        });
+      return {num,price};
     }
   }
 };

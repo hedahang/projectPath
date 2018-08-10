@@ -1,17 +1,19 @@
 <template>
   <div class="submit-order">
-    <div class="userInfo ui acenter">
+    <x-header class="home-header header-bar" :left-options="{backText: ''}" title="确认订单" style="background-color:#FF5151;">
+    </x-header>
+    <router-link class="userInfo ui acenter" to="/address">
       <div class="lf f1">
         <div class="top">
-          <span class='username'>佚名</span>
-          <span class='mobile'>138****8000</span>
+          <span class='username'>{{defaultAddr.name}}</span>
+          <span class='mobile'>{{defaultAddr.mobile|formatMobile}}</span>
         </div>
-        <div class="school">西南交通大学</div>
+        <div class="school">{{defaultAddr.province_name+defaultAddr.city_name+defaultAddr.city_name+defaultAddr.detailed_address}}</div>
       </div>
       <div class="rt fshrink">
         <img src="../../assets/images/my_btn_next@2x.png" alt="">
       </div>
-    </div>
+    </router-link>
     <div class="box">
       <div class="box-list">
         <div class="box-item" v-for="(item,index) in list" :key='index'>
@@ -83,13 +85,28 @@
   </div>
 </template>
 <script>
-import { Group, PopupPicker, Popup, TransferDom } from "vux";
+import { Group, PopupPicker, Popup, TransferDom, XHeader } from "vux";
 import iconSearch from "@/assets/images/home_icon_search@2x.png";
 import iconPocket from "@/assets/images/recommend_btn_pocket@2x.png";
+import { util, request as $, cookie } from "@/utils/index";
 export default {
   name: "submitOrder",
   data() {
     return {
+      defaultAddr: {
+        id: undefined,
+        user_id: undefined,
+        name: "张三",
+        mobile: "13800138000",
+        province_id: null,
+        province_name: "",
+        city_id: null,
+        city_name: "",
+        area_id: null,
+        area_name: "",
+        detailed_address: "",
+        is_default: 1,
+      },
       list: [
         {
           img:
@@ -129,9 +146,30 @@ export default {
   components: {
     PopupPicker,
     Group,
-    Popup
+    Popup,
+    XHeader
+  },
+  filters: {
+    formatMobile(val) {
+      return val.slice(0, 3)+'****'+val.slice(7, 11);
+    }
+  },
+  created() {
+    // 初始页面数据
+    this.getPageData();
   },
   methods: {
+    getPageData() {
+      //获取默认地址
+      $.get("/api/addresses").then(response => {
+        let list = response.data && response.data.list;
+        list&&list.length !== 0&&list.forEach(item=>{
+          if(item.is_default == 1){
+            this.defaultAddr = item;
+          }
+        })
+      });
+    },
     // 打开支付弹框
     switchPayModal(type) {
       if (type == "open") {
@@ -147,6 +185,7 @@ export default {
 </script>
 <style lang="less">
 .submit-order {
+  padding: 46px 0 50px;
   .userInfo {
     width: 100%;
     height: 60px;

@@ -37,16 +37,22 @@ export default {
      * @param {Boolean} isAdd 是否增加
      */
     changeQty: function(isAdd) {
+      this.$vux.loading.show()
       var num = this.item.qty;
       if (isAdd && num < config.maxGoodsNum) {
-        this.$set(this.item, "qty", ++num);
         $.post(`/api/carts`, {
           goods: [{ id: this.item.id, qty: 1 }]
+        }).then(res => {
+          this.$set(this.item, "qty", ++num);
+      this.$vux.loading.hide()
         });
       } else if (!isAdd && num > 0) {
-        this.$set(this.item, "qty", --num);
         $.put(`/api/carts`, {
-          goods: [{ row_id: this.item.id, qty: this.item.qty }]
+          row_id: this.item.row_id,
+          qty: this.item.qty--
+        }).then(res => {
+          this.$set(this.item, "qty", --num);
+      this.$vux.loading.hide()
         });
       }
     }
