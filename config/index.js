@@ -12,7 +12,7 @@ module.exports = {
         proxyTable: {
             // 用‘/url’开头，代理所有请求到目标服务器
             '/api': {
-                target: 'http://wm.bookround.com', // 接口域名
+                target: 'http://www.whymorewx.com', // 接口域名
                 changeOrigin: true, // 是否启用跨域
                 pathRewrite: { //
                     '^/api': '/api'

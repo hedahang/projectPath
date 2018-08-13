@@ -3,10 +3,7 @@ import {
     setCookie,
     removeCookie
 } from '@/utils/auth'
-import {
-    util,
-    request as $,
-} from "@/utils/index";
+import { util, request as $, cookie } from "@/utils/index";
 
 const state = {
     uname: '',
@@ -62,6 +59,23 @@ const actions = {
             })
         })
     },
+    // 获取用户信息
+    getUserInfo({ commit, state }) {
+        return new Promise((resolve, reject) => {
+            $.get('/api/user').then((rs) => {
+                if (rs.status) {
+                    let { avatar, mobile, name, id } = rs.data;
+                    cookie.set('userAvatar', avatar);
+                    cookie.set('userMobile', mobile);
+                    cookie.set('username', name);
+                    cookie.set('userId', id);
+                }
+                resolve()
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    }
 }
 const getters = {
     uname: state => state.uname,

@@ -4,7 +4,7 @@
     </x-header>
     <!-- 订单分类 -->
     <div class="order-nav">
-      <tab v-model="status" prevent-default @on-before-index-change="switchTabItem">
+      <tab v-model="status" prevent-default @on-before-index-change="switchTabItem" :line-width='2' bar-active-color='#ff5151' active-color='#ff5151'>
         <tab-item v-for="(item,index) in statusList" :key="index">{{ item }}</tab-item>
       </tab>
     </div>
@@ -61,7 +61,7 @@ export default {
       edit: false,
       goodsList: [],
       status:0, // 状态，0-全部，1-未付款，2-已付款，3-未发货，4-已发货，5-交易完成，6-交易关闭
-      statusList:["全部",'未付款','已付款','已付款','未发货','已发货','交易完成','交易关闭']
+      statusList:["全部",'未付款','已付款','未发货','已发货','交易完成','交易关闭']
     };
   },
   components: {
@@ -139,6 +139,12 @@ export default {
     left: 0;
     top: 0;
     z-index: 100;
+  }
+  .order-nav{
+    .curActive{
+      color: #ff5151 !important;
+      border-bottom: 2px solid #FF5151 !important;
+    }
   }
   .goods-box {
     width: 100%;
