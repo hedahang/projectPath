@@ -9,6 +9,7 @@ import Classify from '@/views/classify/index'
 import Goods from '@/views/goods/detail'
 import SubmitOrder from '@/views/order/submit-order'
 import Order from '@/views/order/index'
+import OrderDetail from '@/views/order/detail'
 import Carts from '@/views/carts/index'
 import My from '@/views/my/index'
 import Setting from '@/views/setting/index'
@@ -65,6 +66,11 @@ export default new Router({
             path: '/order',
             component: Order,
             name: 'order',
+        },
+        {
+            path: '/orderDetail',
+            component: OrderDetail,
+            name: 'orderDetail',
         },
         {
             path: '/carts',

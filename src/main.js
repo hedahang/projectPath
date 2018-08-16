@@ -8,11 +8,13 @@ import store from './store'
 import Vuex from 'vuex'
 import router from './router'
 import { Message } from './utils/msg'
+import infiniteScroll from 'vue-infinite-scroll'
 
 // Vue.use(global);
 Vue.use(VueRouter)
 Vue.use(Message)
 Vue.use(Vuex)
+Vue.use(infiniteScroll)
 
 FastClick.attach(document.body)
 

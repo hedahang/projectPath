@@ -12,7 +12,7 @@
       <span class="searchBtn" @click="handleSearch" slot="right">搜索</span>
     </x-header>
     <!-- 商品列表 -->
-    <goodsListC :list="goodsList.data"></goodsListC>
+    <goodsListC v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="10" :list="goodsList.data"></goodsListC>
   </div>
 </template>
 
@@ -25,11 +25,13 @@ export default {
   name: "search",
   data() {
     return {
+      firstAjax:true, // 首次加载
+      busy:false,
       iconSearch: iconSearch,
       goodsList: [],
-      formVal:{
-        q:'',
-        page: 1,
+      formVal: {
+        q: "",
+        page: 1
       }
     };
   },
@@ -39,17 +41,34 @@ export default {
     Group,
     goodsListC
   },
+  mounted() {
+  },
   methods: {
-    getPageData(){
-      $.post("/api/goods/search",this.formVal).then(response => {
-        this.goodsList = response.data && response.data.list;
-        this.goodsList  && this.goodsList.data &&
+    loadMore(){
+      if(this.firstAjax) return
+      console.log(21312)
+      this.busy = true;
+     //官方示例中延迟了1秒，防止滚动条滚动时的频繁请求数据
+      setTimeout(() => {
+        //这里请求接口去拿数据，实际应该是调用一个请求数据的方法
+        this.busy = false;
+      }, 1000);
+    },
+    getPageData() {
+      this.$vux.loading.show();
+      $.post("/api/goods/search", this.formVal).then(response => {
+        this.goodsList = response.data;
+        this.goodsList.data = this.goodsList.data.concat(this.goodsList.data).concat(this.goodsList.data).concat(this.goodsList.data).concat(this.goodsList.data)
+        this.goodsList &&
+          this.goodsList.data &&
           this.goodsList.data.length !== 0 &&
           this.goodsList.data.forEach(item => {
             if (!item.qty) {
               this.$set(item, "qty", 0);
             }
           });
+          this.firstAjax = false;
+      this.$vux.loading.hide();
       });
     },
     handleSearch() {

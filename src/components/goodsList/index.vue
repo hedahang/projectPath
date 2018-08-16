@@ -1,5 +1,5 @@
 <template>
-  <div class="goods-list">
+  <div class="goods-list" id='goods-list'>
         <a v-for="(item,index) in dealList" :key='index' class="goods-list-item" :href="item.id&&'#/goods?id='+item.id">
             <div class="item-lf">
                 <img :src="item.image&&item.image[0]" alt="">
