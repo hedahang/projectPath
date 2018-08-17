@@ -21,7 +21,7 @@
       </grid-item>
     </grid>
     <!-- 商品列表 -->
-    <goodsListC :list="goodsList"></goodsListC>
+    <goodsListC :list="goodsList.data"></goodsListC>
     <!-- 底部导航栏 -->
     <footerBar selected="home"></footerBar>
   </div>
@@ -51,7 +51,8 @@ export default {
       iconSearch: iconSearch,
       classifyList: [],
       bannerList: [],
-      goodsList: []
+      goodsList: [],
+      page: 1
     };
   },
   components: {
@@ -68,12 +69,7 @@ export default {
     footerBar,
     goodsListC
   },
-  computed: {
-    addNumber: function() {
-      let list = this.goodsList && this.goodsList.data;
-      return list;
-    }
-  },
+  computed: {},
   created() {
     this.getPageData();
   },
@@ -86,16 +82,17 @@ export default {
         this.classifyList = response.data;
       });
       //首页商品列表
-      $.get("/api/goods").then(response => {
-        this.goodsList = response.data && response.data.data;
-        this.goodsList  && this.goodsList.data &&
+      $.get(`/api/goods?page=${this.page}`).then(response => {
+        this.goodsList = response.data;
+        this.goodsList &&
+          this.goodsList.data &&
           this.goodsList.data.length !== 0 &&
           this.goodsList.data.forEach(item => {
             if (!item.qty) {
               this.$set(item, "qty", 0);
             }
           });
-          console.log(this.goodsList)
+        console.log(this.goodsList);
       });
       //banner列表
       $.get("/api/banners").then(response => {

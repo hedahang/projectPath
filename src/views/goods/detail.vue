@@ -80,9 +80,11 @@ export default {
   },
   methods: {
     getPageData() {
+      this.$vux.loading.show();
       //商品
       $.get(`/api/goods/${this.goodsId}`).then(response => {
         this.data = Object.assign(this.data, response.data && response.data[0]);
+        this.$vux.loading.hide();
       });
       // 获取购物车数据
       $.get("/api/carts").then(response => {
@@ -99,15 +101,17 @@ export default {
         this.cartList.forEach(item => {
           if (item.id == this.data.id) {
             num += parseInt(this.data.qty);
-            price += parseFloat(item.sale_price)*100*parseInt(this.data.qty)/100;
+            price +=
+              parseFloat(item.sale_price) * 100 * parseInt(this.data.qty) / 100;
           } else {
             if (!!item.qty) {
               num += parseInt(item.qty);
-              price += parseFloat(item.sale_price)*100*parseInt(item.qty)/100;
+              price +=
+                parseFloat(item.sale_price) * 100 * parseInt(item.qty) / 100;
             }
           }
         });
-      return {num,price};
+      return { num, price };
     }
   }
 };

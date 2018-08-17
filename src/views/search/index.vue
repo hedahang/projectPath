@@ -13,11 +13,12 @@
     </x-header>
     <!-- 商品列表 -->
     <goodsListC v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="10" :list="goodsList.data"></goodsListC>
+    <load-more :show-loading="!firstAjax&&!loadMoreOver" :tip="firstAjax?'暂无数据':loadMoreOver?'没有更多数据了':'正在加载'" background-color="#fbf9fe"></load-more>
   </div>
 </template>
 
 <script>
-import { XInput, Group, XHeader } from "vux";
+import { XInput, Group, XHeader,LoadMore  } from "vux";
 import goodsListC from "@/components/goodsList/index";
 import iconSearch from "@/assets/images/home_icon_search@2x.png";
 import { util, request as $, cookie } from "@/utils/index";
@@ -27,11 +28,13 @@ export default {
     return {
       firstAjax:true, // 首次加载
       busy:false,
+      loadMoreOver:false, // 是否加载完所有
       iconSearch: iconSearch,
       goodsList: [],
       formVal: {
         q: "",
-        page: 1
+        page: 1,
+        per_page:1,
       }
     };
   },
@@ -39,14 +42,14 @@ export default {
     XHeader,
     XInput,
     Group,
-    goodsListC
+    goodsListC,
+    LoadMore 
   },
   mounted() {
   },
   methods: {
     loadMore(){
       if(this.firstAjax) return
-      console.log(21312)
       this.busy = true;
      //官方示例中延迟了1秒，防止滚动条滚动时的频繁请求数据
       setTimeout(() => {
@@ -58,7 +61,7 @@ export default {
       this.$vux.loading.show();
       $.post("/api/goods/search", this.formVal).then(response => {
         this.goodsList = response.data;
-        this.goodsList.data = this.goodsList.data.concat(this.goodsList.data).concat(this.goodsList.data).concat(this.goodsList.data).concat(this.goodsList.data)
+        this.goodsList.data = this.goodsList.data;
         this.goodsList &&
           this.goodsList.data &&
           this.goodsList.data.length !== 0 &&
@@ -68,6 +71,14 @@ export default {
             }
           });
           this.firstAjax = false;
+
+          // 判断是否加载完成
+          if(this.goodsList.current_page == this.goodsList.last_page){
+            this.busy = true;
+            this.loadMoreOver = true;
+          }else{
+            this.formVal.page = this.formVal.page+1
+          }
       this.$vux.loading.hide();
       });
     },
@@ -85,7 +96,7 @@ export default {
 
 <style rel="stylesheet/less" lang="less">
 .search {
-  padding: 46px 0 50px;
+  padding: 46px 0 0px;
   .search-header {
     position: fixed;
     width: 100%;
