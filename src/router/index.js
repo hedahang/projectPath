@@ -19,6 +19,8 @@ import Coupon from '@/views/coupon/index'
 import Address from '@/views/address/index'
 import AddAddress from '@/views/address/add'
 import Opinion from '@/views/opinion/index'
+import OpinionDetail from '@/views/opinion/detail'
+import OpinionFeedback from '@/views/opinion/feedback'
 
 Vue.use(Router)
 
@@ -116,6 +118,16 @@ export default new Router({
             path: '/opinion',
             component: Opinion,
             name: 'opinion',
+        },
+        {
+            path: '/opinion/detail',
+            component: OpinionDetail,
+            name: 'opinionDetail',
+        },
+        {
+            path: '/opinion/feedback',
+            component: OpinionFeedback,
+            name: 'opinionFeedback',
         },
     ]
 })

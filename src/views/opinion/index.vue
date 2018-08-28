@@ -21,9 +21,9 @@
       </router-link>
     </div>
     <!-- 确认 -->
-    <div class="confirm">
+    <router-link to="/opinion/feedback" class="confirm">
       <div class="confirm-box ui center">写反馈</div>
-    </div>
+    </router-link>
   </div>
 </template>
 
