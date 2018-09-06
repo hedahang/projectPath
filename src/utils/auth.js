@@ -1,6 +1,4 @@
-import {
-    cookie
-} from 'vux'
+import { cookie } from 'vux'
 
 export function getCookie(key) {
     let rs = cookie.get(key)
