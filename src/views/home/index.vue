@@ -84,6 +84,9 @@ export default {
       //首页商品列表
       $.get(`/api/goods?page=${this.page}`).then(response => {
         this.goodsList = response.data;
+        if(this.goodsList.data.current_page){
+          this.goodsList = this.goodsList.data;
+        }
         this.goodsList &&
           this.goodsList.data &&
           this.goodsList.data.length !== 0 &&

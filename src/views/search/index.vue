@@ -58,10 +58,13 @@ export default {
       }, 1000);
     },
     getPageData() {
+      if(this.formVal.q == "")return;
       this.$vux.loading.show();
       $.post("/api/goods/search", this.formVal).then(response => {
         this.goodsList = response.data;
-        this.goodsList.data = this.goodsList.data;
+        if(this.goodsList.data.current_page){
+          this.goodsList = this.goodsList.data;
+        }
         this.goodsList &&
           this.goodsList.data &&
           this.goodsList.data.length !== 0 &&

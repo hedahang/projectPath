@@ -6,7 +6,7 @@ import { util, cookie } from "@/utils/index";
 // 创建axios实例
 const service = axios.create({
     // api 的base_url
-    // baseURL: process.env.BASE_API,
+    baseURL: process.env.BASE_API,
     // 请求超时时间
     timeout: 20000,
     //指示是否跨站点访问控制请求

@@ -63,18 +63,7 @@ export default {
       edit: false,
       allPrice: 0,
       isAllChecked: false, // 是否全选
-      goodsList: [
-        {
-          image:
-            "http://ofjo26fgy.bkt.clouddn.com/21d87e11b15046bfb4a6f73af2c3b80e.jpg",
-          name: "薯片",
-          description: "非常棒的薯片",
-          sales: "2000",
-          sale_price: "8",
-          qty: 999,
-          checked: false
-        }
-      ]
+      goodsList: []
     };
   },
   components: {
