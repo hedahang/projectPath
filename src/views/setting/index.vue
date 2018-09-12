@@ -11,7 +11,7 @@
           </div>
           <div class="rt icon-right">
             <vue-core-image-upload class="btn btn-primary" :crop="false" @imageuploaded="imageuploaded" :data="data" :max-file-size="5242880"
-              :url="baseUrl" :headers='setHeaders'>
+              :url="baseUrl" :headers='setHeaders' inputOfFile='avatar'>
               <img width="40" height="40" :src="src" />
             </vue-core-image-upload>
           </div>
@@ -53,25 +53,49 @@ export default {
   data() {
     return {
       baseUrl: process.env.BASE_API + "/api/user/upload",
-      setHeaders:{'Authorization':`Bearer ${cookie.get('windice_token')}`},
+      setHeaders: { Authorization: `Bearer ${cookie.get("windice_token")}` },
       pageTitle: "设置",
-      src:
-        "http://img1.vued.vanthink.cn/vued0a233185b6027244f9d43e653227439a.png",
+      src: "",
       name: "海是倒过来的天",
       mobile: 13000000000,
-      data:null,
+      data: null
     };
   },
   components: {
     XHeader,
     "vue-core-image-upload": VueCoreImageUpload
   },
-  created() {},
+  created() {
+    this.src =
+      cookie.get("windice_userAvatar") ||
+      "http://img1.vued.vanthink.cn/vued0a233185b6027244f9d43e653227439a.png";
+    this.name = cookie.get("windice_username") || "未设置";
+    this.mobile = cookie.get("windice_userMobile") || "未设置";
+  },
   methods: {
     imageuploaded(res) {
-      if (res.errcode == 0) {
-        this.src = res.data.src;
+      if (res.code == 200) {
+        this.src = res.data.preview;
+        this.$vux.loading.show();
+        this.updateUserInfo(res.data.avatar)
+      } else {
+        this.$vux.toast.show({
+          text: res.message,
+          type: "warn"
+        });
       }
+    },
+    updateUserInfo(avatar) {
+      $.put(`/api/user`, {
+        avatar: avatar
+      }).then(res => {
+        cookie.set("userAvatar",res.data.avatar)
+        this.$vux.loading.hide();
+        this.$vux.toast.show({
+          text: "修改成功",
+          type: "success"
+        });
+      });
     }
   },
   computed: {

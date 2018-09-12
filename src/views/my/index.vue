@@ -117,17 +117,17 @@ export default {
   },
   methods: {
     getUserInfo() {
-      let userId = cookie.get("userId");
+      let userId = cookie.get("windice_userId");
       if (!userId) {
         this.$store.dispatch("getUserInfo").then(() => {
-          this.username = cookie.get("username");
-          this.userAvatar = cookie.get("userAvatar");
-          this.userId = cookie.get("userId");
+          this.username = cookie.get("windice_username");
+          this.userAvatar = cookie.get("windice_userAvatar");
+          this.userId = cookie.get("windice_userId");
         });
       } else {
-        this.username = cookie.get("username");
-        this.userAvatar = cookie.get("userAvatar");
-        this.userId = cookie.get("userId");
+        this.username = cookie.get("windice_username");
+        this.userAvatar = cookie.get("windice_userAvatar");
+        this.userId = cookie.get("windice_userId");
       }
     },
     changeEdit() {

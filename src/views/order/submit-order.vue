@@ -16,16 +16,16 @@
     </router-link>
     <div class="box">
       <div class="box-list">
-        <div class="box-item" v-for="(item,index) in list" :key='index'>
+        <div class="box-item" v-for="(item,index) in pageData.list" :key='index'>
           <div class="item-lf">
-            <img :src="item.img" alt="">
+            <img :src="item.image&&item.image[0]" alt="">
           </div>
           <div class="item-rt">
-            <h4 class="item-rt_title">{{item.title}}</h4>
+            <h4 class="item-rt_title">{{item.name}}</h4>
             <p class="item-rt_desc">{{item.desc}}</p>
             <p class="item-rt_sales">月销售{{item.sales}}份</p>
             <div class="item_rt_footer">
-              <span class='price'>￥{{item.price}}</span>
+              <span class='price'>￥{{item.sale_price}}</span>
               <div class="item_rt_footer_number">x{{item.qty}}</div>
             </div>
           </div>
@@ -34,9 +34,10 @@
       <group>
         <popup-picker title="配送方式" :data="[['送货上门','自提']]" v-model="value1"></popup-picker>
       </group>
-      <group class='coupon'>
-        <popup-picker title="优惠券" :data="[['送货上门','自提']]" v-model="value1"></popup-picker>
-      </group>
+      <div class='coupon row ui acenter jbetween'>
+        <div class="lf">优惠券</div>
+        <div class="rt icon-right" @click="showCouponPopup = true">{{pageData.couponCount+'张可选'}}</div>
+      </div>
     </div>
     <div class="cost">
       <div class="cost-amount row ui acenter jbetween">
@@ -63,13 +64,13 @@
                 <img @click="switchPayModal('close')" src='../../assets/images/btn_zhifu_qx@2x.png' alt="">
             </div>
             <div class="popupBox-list">
-                <div class="item ui acenter jbetween">
+                <!-- <div class="item ui acenter jbetween">
                     <div class="wx lf ui">
                         <img src="../../assets/images/icon_zhifu_wx@2x.png" alt="">
                         <span>微信支付</span>
                     </div>
                     <div class="rt checked"></div>
-                </div>
+                </div> -->
                 <div class="item ui acenter jbetween">
                     <div class="zfb lf ui">
                         <img src="../../assets/images/icon_zhifu_zfb@2x.png" alt="">
@@ -82,10 +83,32 @@
         </div>
       </popup>
     </div>
+    <div v-transfer-dom>
+      <popup v-model="showCouponPopup" height="270px" is-transparent>
+        <div style="width: 95%;background-color:#fff;height:250px;margin:0 auto;border-radius:5px;padding-top:10px;">
+         <group>
+          <cell title="Product" value="Donate"></cell>
+          <cell title="Total" value="$10.24"></cell>
+         </group>
+         <div style="padding:20px 15px;">
+          <x-button type="primary">Pay</x-button>
+          <x-button @click.native="showCouponPopup = false">Cancel</x-button>
+         </div>
+        </div>
+      </popup>
+    </div>
   </div>
 </template>
 <script>
-import { Group, PopupPicker, Popup, TransferDom, XHeader } from "vux";
+import {
+  Group,
+  Cell,
+  XButton,
+  PopupPicker,
+  Popup,
+  TransferDom,
+  XHeader
+} from "vux";
 import iconSearch from "@/assets/images/home_icon_search@2x.png";
 import iconPocket from "@/assets/images/recommend_btn_pocket@2x.png";
 import { util, request as $, cookie } from "@/utils/index";
@@ -105,39 +128,18 @@ export default {
         area_id: null,
         area_name: "",
         detailed_address: "",
-        is_default: 1,
+        is_default: 1
       },
-      list: [
-        {
-          img:
-            "http://ofjo26fgy.bkt.clouddn.com/21d87e11b15046bfb4a6f73af2c3b80e.jpg",
-          title: "薯片",
-          desc: "非常棒的薯片",
-          sales: "2000",
-          price: "8",
-          qty: 8
-        },
-        {
-          img:
-            "http://ofjo26fgy.bkt.clouddn.com/21d87e11b15046bfb4a6f73af2c3b80e.jpg",
-          title: "薯片",
-          desc: "非常棒的薯片",
-          sales: "2000",
-          price: "8",
-          qty: 8
-        },
-        {
-          img:
-            "http://ofjo26fgy.bkt.clouddn.com/21d87e11b15046bfb4a6f73af2c3b80e.jpg",
-          title: "薯片",
-          desc: "非常棒的薯片",
-          sales: "2000",
-          price: "8",
-          qty: 8
-        }
-      ],
+      pageData: {
+        couponCount: "",
+        freight: "",
+        list: "",
+        payType: { 1: "支付宝", 2: "微信" },
+        shippingType: { 1: "快递", 2: "送货上门" }
+      },
       value1: [],
       showPopup: false,
+      showCouponPopup: false,
       row_id: []
     };
   },
@@ -148,19 +150,19 @@ export default {
     PopupPicker,
     Group,
     Popup,
-    XHeader
+    XHeader,
+    Cell,
+    XButton
   },
   filters: {
     formatMobile(val) {
-      return val.slice(0, 3)+'****'+val.slice(7, 11);
+      return val.slice(0, 3) + "****" + val.slice(7, 11);
     }
   },
   created() {
     // 初始页面数据
-    this.getPageData();
-  },
-  created() {
     let payGoods = cookie.get("payGoods");
+    console.log(cookie.get("payGoods"));
     this.row_id = payGoods && payGoods.split(",");
     this.getPageData();
   },
@@ -169,15 +171,17 @@ export default {
       //获取默认地址
       $.get("/api/addresses").then(response => {
         let list = response.data && response.data.list;
-        list&&list.length !== 0&&list.forEach(item=>{
-          if(item.is_default == 1){
-            this.defaultAddr = item;
-          }
-        })
+        list &&
+          list.length !== 0 &&
+          list.forEach(item => {
+            if (item.is_default == 1) {
+              this.defaultAddr = item;
+            }
+          });
       });
       //商品列表
-      $.get("/api/carts/confirm", { row_id: this.row_id }).then(response => {
-        console.log(response);
+      $.get("/api/carts/confirm", { row_id: this.row_id }).then(rs => {
+        this.pageData = rs.data;
       });
     },
     // 打开支付弹框

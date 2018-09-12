@@ -155,7 +155,6 @@ export default {
             payGoods.push(item.row_id);
           }
         });
-      console.log(payGoods);
       if (payGoods && payGoods.length !== 0) {
         cookie.set("payGoods", payGoods.join(","));
         this.$router.push("/submitOrder");

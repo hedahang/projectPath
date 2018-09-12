@@ -11,13 +11,13 @@ module.exports = {
         assetsPublicPath: '/',
         proxyTable: {
             // 用‘/url’开头，代理所有请求到目标服务器
-            '/api': {
-                target: 'http://www.whymorewx.com', // 接口域名
-                changeOrigin: true, // 是否启用跨域
-                pathRewrite: { //
-                    '^/api': '/api'
-                }
-            }
+            // '/api': {
+            //     target: 'http://www.whymorewx.com', // 接口域名
+            //     changeOrigin: true, // 是否启用跨域
+            //     pathRewrite: { //
+            //         '^/api': '/api'
+            //     }
+            // }
         },
 
         // Various Dev Server settings

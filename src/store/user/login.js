@@ -65,10 +65,10 @@ const actions = {
             $.get('/api/user').then((rs) => {
                 if (rs.status) {
                     let { avatar, mobile, name, id } = rs.data;
-                    cookie.set('userAvatar', avatar);
-                    cookie.set('userMobile', mobile);
-                    cookie.set('username', name);
-                    cookie.set('userId', id);
+                    cookie.set('windice_userAvatar', avatar);
+                    cookie.set('windice_userMobile', mobile);
+                    cookie.set('windice_username', name);
+                    cookie.set('windice_userId', id);
                 }
                 resolve()
             }).catch(error => {

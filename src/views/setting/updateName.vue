@@ -27,7 +27,7 @@ export default {
   data() {
     return {
       pageTitle: "修改昵称",
-      username: "海是倒过来的天"
+      username: ""
     };
   },
   components: {
@@ -36,7 +36,9 @@ export default {
     Group,
     Cell
   },
-  created() {},
+  created() {
+    this.username = cookie.get('windice_username');
+  },
   methods: {
     confirm() {
       if (!!this.username) {
