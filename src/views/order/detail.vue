@@ -80,7 +80,7 @@ import goodsListC from "@/components/goodsList/index";
 import { util, request as $, cookie } from "@/utils/index";
 import config from "@/config/index";
 export default {
-  name: "home",
+  name: "orderDetail",
   data() {
     return {
       orderStatus: config.orderStatus,

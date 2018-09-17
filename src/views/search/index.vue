@@ -12,7 +12,7 @@
       <span class="searchBtn" @click="handleSearch" slot="right">搜索</span>
     </x-header>
     <!-- 商品列表 -->
-    <goodsListC v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="10" :list="goodsList.data"></goodsListC>
+    <goodsListC v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="10" :list="goodsList"></goodsListC>
     <load-more :show-loading="!firstAjax&&!loadMoreOver" :tip="firstAjax?'暂无数据':loadMoreOver?'没有更多数据了':'正在加载'" background-color="#fbf9fe"></load-more>
   </div>
 </template>
@@ -29,12 +29,13 @@ export default {
       firstAjax:true, // 首次加载
       busy:false,
       loadMoreOver:false, // 是否加载完所有
+      total:"",//总数量
       iconSearch: iconSearch,
       goodsList: [],
       formVal: {
         q: "",
         page: 1,
-        per_page:1,
+        per_page:10,
       }
     };
   },
@@ -55,34 +56,35 @@ export default {
       setTimeout(() => {
         //这里请求接口去拿数据，实际应该是调用一个请求数据的方法
         this.busy = false;
+        this.getPageData();
       }, 1000);
     },
     getPageData() {
       if(this.formVal.q == "")return;
       this.$vux.loading.show();
       $.post("/api/goods/search", this.formVal).then(response => {
-        this.goodsList = response.data;
-        if(this.goodsList.data.current_page){
+        this.goodsList = this.goodsList.concat(response.data.data);
+        this.total = response.data.total;
+        if (this.goodsList.current_page) {
           this.goodsList = this.goodsList.data;
         }
         this.goodsList &&
-          this.goodsList.data &&
-          this.goodsList.data.length !== 0 &&
-          this.goodsList.data.forEach(item => {
+          this.goodsList.length !== 0 &&
+          this.goodsList.forEach(item => {
             if (!item.qty) {
               this.$set(item, "qty", 0);
             }
           });
-          this.firstAjax = false;
-
-          // 判断是否加载完成
-          if(this.goodsList.current_page == this.goodsList.last_page){
-            this.busy = true;
-            this.loadMoreOver = true;
-          }else{
-            this.formVal.page = this.formVal.page+1
-          }
-      this.$vux.loading.hide();
+        this.firstAjax = false;
+        // 判断是否加载完成
+        if (this.formVal.page * this.formVal.per_page >= this.total) {
+          this.busy = true;
+          this.loadMoreOver = true;
+        } else {
+          this.formVal.page = this.formVal.page + 1;
+          this.busy = false;
+        }
+        this.$vux.loading.hide();
       });
     },
     handleSearch() {

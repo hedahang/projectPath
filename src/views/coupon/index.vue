@@ -49,7 +49,7 @@ export default {
   methods: {
     getPageData() {
       this.$vux.loading.show();
-      //我的商品列表
+      //我的优惠券列表
       $.get("/api/coupons").then(response => {
         this.data = response.data && response.data.list;
         this.$vux.loading.hide();
@@ -67,6 +67,7 @@ export default {
 <style rel="stylesheet/less" lang="less">
 .my-coupon {
   padding: 46px 0 94px;
+
   .home-header {
     position: fixed;
     width: 100%;
@@ -74,9 +75,11 @@ export default {
     top: 0;
     z-index: 100;
   }
+
   .coupon-list {
     padding: 10px;
     overflow: hidden;
+
     .coupon-item {
       width: 100%;
       height: 80px;
@@ -84,23 +87,28 @@ export default {
       background-size: 100%;
       margin-bottom: 10px;
       overflow: hidden;
+
       &.overdue2 {
         background: url("../../assets/images/coupon_bg_frozen@2x.png");
         background-size: 100%;
       }
+
       &.overdue3 {
         background: url("../../assets/images/coupon_bg_unavailable@2x.png");
         background-size: 100%;
       }
+
       &.overdue4 {
         background: url("../../assets/images/coupon_bg_overdue@2x.png");
         background-size: 100%;
       }
+
       .lf {
         width: 120px;
         height: 100%;
         flex-direction: column;
         flex-shrink: 0;
+
         .price {
           font-weight: 400;
           font-size: 30px;
@@ -121,9 +129,11 @@ export default {
           max-width: 90%;
         }
       }
+
       .rt {
         // background-color: #fff;
         overflow: hidden;
+
         .name {
           // width: 100%;
           // height: 20px;
@@ -137,6 +147,7 @@ export default {
           -webkit-line-clamp: 2;
           -webkit-box-orient: vertical;
         }
+
         .date {
           width: 100%;
           height: 16px;
@@ -145,6 +156,7 @@ export default {
           font-size: 12px;
           margin: 4px 0 0 10px;
         }
+
         .desc {
           width: 100%;
           height: 16px;

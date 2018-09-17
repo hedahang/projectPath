@@ -13,7 +13,7 @@
     <div class="goods-box">
       <div class="goods-list">
         <template v-for="(item,index) in goodsList">
-          <div v-if='item.length==1' :key='index' class="goods-list-item">
+          <div v-if='item.count==1&&(status==0||status==item.status)' :key='index' class="goods-list-item">
             <div class="item-top">
               <div class="item-lf">
                 <img :src="item.image&&item.image[0]" alt="">
@@ -24,7 +24,7 @@
                   <span class="status">{{statusList[item.status]}}</span>
                 </h4>
                 <div class="item_rt_footer">
-                  <span class='price'>￥{{item.price}}</span>
+                  <span class='price'>￥{{item.total_amount}}</span>
                 </div>
               </div>
             </div>
@@ -33,21 +33,21 @@
               <div class="pay">立即支付</div>
             </div>
           </div>
-          <div v-else :key='index' class="goods-list-item not-only">
+          <div v-if='item.count!=1&&(status==0||status==item.status)' :key='index' class="goods-list-item not-only">
             <div class="item-top">
               <span class="status">{{statusList[item.status]}}</span>
             </div>
             <div class="item-center">
               <ul class='item-center-ul'>
-                <li v-for="itm in 10" :key='itm'>
-                  <img :src="item.image&&item.image[0]" alt="">
+                <li v-for="(itm,idx) in item.items" :key='idx'>
+                  <img :src="itm.image&&itm.image" alt="">
                 </li>
               </ul>
               <div class="item-center-price">
                 <div class="item-center-price-box">
-                  <p class='p1'>共计{{item.length}}件商品</p>
+                  <p class='p1'>共计{{item.count}}件商品</p>
                   <p class='p2'>合计: 
-                    <b>￥200</b>
+                    <b>￥{{item.total_amount}}</b>
                   </p>
                 </div>
               </div>
@@ -84,7 +84,7 @@ import goodsListC from "@/components/goodsList/index";
 import { util, request as $, cookie } from "@/utils/index";
 import config from "@/config/index";
 export default {
-  name: "home",
+  name: "orderlist",
   data() {
     return {
       orderStatus: config.orderStatus,
@@ -149,7 +149,7 @@ export default {
       this.$vux.loading.show();
       //我的商品列表
       $.get("/api/orders").then(response => {
-        // this.goodsList = response.data && response.data.list;
+        this.goodsList = response.data && response.data.list;
         this.goodsList &&
           this.goodsList.data &&
           this.goodsList.data.length !== 0 &&
@@ -164,23 +164,14 @@ export default {
     },
     // 切换状态
     switchTabItem(index) {
-      console.log("on-before-index-change", index);
       this.$vux.loading.show({
         text: "loading"
       });
       setTimeout(() => {
         this.$vux.loading.hide();
         this.status = index;
-      }, 1000);
+      }, 300);
     },
-    changeEdit() {
-      this.edit = !this.edit;
-      this.headerRight = this.headerRight == "编辑" ? "完成" : "编辑";
-    },
-    toSearch() {
-      //   console.log("123");
-      this.$router.push("/search");
-    }
   },
   computed: {
     getName: function() {

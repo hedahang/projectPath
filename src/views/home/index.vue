@@ -21,7 +21,8 @@
       </grid-item>
     </grid>
     <!-- 商品列表 -->
-    <goodsListC :list="goodsList.data"></goodsListC>
+    <goodsListC :list="goodsList" v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="20"></goodsListC>
+    <load-more :show-loading="!firstAjax&&!loadMoreOver" :tip="firstAjax?'暂无数据':loadMoreOver?'没有更多数据了':'正在加载'" background-color="#fbf9fe"></load-more>
     <!-- 底部导航栏 -->
     <footerBar selected="home"></footerBar>
   </div>
@@ -38,7 +39,8 @@ import {
   Group,
   ButtonTab,
   ButtonTabItem,
-  XHeader
+  XHeader,
+  LoadMore
 } from "vux";
 import footerBar from "@/components/footerBar/index";
 import goodsListC from "@/components/goodsList/index";
@@ -52,7 +54,14 @@ export default {
       classifyList: [],
       bannerList: [],
       goodsList: [],
-      page: 1
+      listQuery: {
+        page: 1,
+        per_page: 10
+      },
+      firstAjax: true, // 首次加载
+      busy: false,
+      loadMoreOver: false, // 是否加载完所有
+      total:"",//总数量
     };
   },
   components: {
@@ -67,35 +76,28 @@ export default {
     GridItem,
     GroupTitle,
     footerBar,
-    goodsListC
+    goodsListC,
+    LoadMore
   },
   computed: {},
   created() {
     this.getPageData();
+    this.getGoodsList();
   },
   methods: {
+    loadMore() {
+      if (this.firstAjax) return;
+      this.busy = true;
+      //官方示例中延迟了1秒，防止滚动条滚动时的频繁请求数据
+      setTimeout(() => {
+        //这里请求接口去拿数据，实际应该是调用一个请求数据的方法
+        this.getGoodsList();
+      }, 1000);
+    },
     getPageData() {
-      // this.$vux.loading.show()
-      // this.$vux.loading.hide()
       //商品分类
       $.get("/api/categories").then(response => {
         this.classifyList = response.data;
-      });
-      //首页商品列表
-      $.get(`/api/goods?page=${this.page}`).then(response => {
-        this.goodsList = response.data;
-        if(this.goodsList.data.current_page){
-          this.goodsList = this.goodsList.data;
-        }
-        this.goodsList &&
-          this.goodsList.data &&
-          this.goodsList.data.length !== 0 &&
-          this.goodsList.data.forEach(item => {
-            if (!item.qty) {
-              this.$set(item, "qty", 0);
-            }
-          });
-        console.log(this.goodsList);
       });
       //banner列表
       $.get("/api/banners").then(response => {
@@ -106,6 +108,34 @@ export default {
     toSearch() {
       //   console.log("123");
       this.$router.push("/search");
+    },
+    getGoodsList() {
+      this.$vux.loading.show();
+      //首页商品列表
+      $.get(`/api/goods`, this.listQuery).then(response => {
+        this.goodsList = this.goodsList.concat(response.data.data);
+        this.total = response.data.total;
+        if (this.goodsList.current_page) {
+          this.goodsList = this.goodsList.data;
+        }
+        this.goodsList &&
+          this.goodsList.length !== 0 &&
+          this.goodsList.forEach(item => {
+            if (!item.qty) {
+              this.$set(item, "qty", 0);
+            }
+          });
+        this.firstAjax = false;
+        // 判断是否加载完成
+        if (this.listQuery.page * this.listQuery.per_page >= this.total) {
+          this.busy = true;
+          this.loadMoreOver = true;
+        } else {
+          this.listQuery.page = this.listQuery.page + 1;
+          this.busy = false;
+        }
+        this.$vux.loading.hide();
+      });
     }
   }
 };

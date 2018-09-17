@@ -32,27 +32,28 @@
         </div>
       </div>
       <group>
-        <popup-picker title="配送方式" :data="[['送货上门','自提']]" v-model="value1"></popup-picker>
+        <popup-picker title="配送方式" :data="shippingTypeData" @on-change='handleShippingType' v-model="value1"></popup-picker>
       </group>
       <div class='coupon row ui acenter jbetween'>
         <div class="lf">优惠券</div>
-        <div class="rt icon-right" @click="showCouponPopup = true">{{pageData.couponCount+'张可选'}}</div>
+        <div class="rt icon-right" @click="showCouponPopup = true">{{!formVal.coupon_id?pageData.couponCount+'张可选'
+          :curCouponData.type==1?'优惠'+curCouponData.discount+'元':curCouponData.discount+'折'}}</div>
       </div>
     </div>
     <div class="cost">
       <div class="cost-amount row ui acenter jbetween">
         <div class="lf">商品金额</div>
-        <div class="rt red">￥28</div>
+        <div class="rt red">￥{{orderPrice}}</div>
       </div>
       <div class="cost-freight row ui acenter jbetween">
         <div class="lf">运费</div>
-        <div class="rt red">￥8</div>
+        <div class="rt red">￥{{pageData.freight}}</div>
       </div>
     </div>
     <div class="footer ui acenter jbetween">
       <div class="lf ui acenter">
         <span class='lf-text'>合计</span>
-        <span class='lf-price'>￥36.00</span>
+        <span class='lf-price'>￥{{orderLastPrice}}</span>
       </div>
       <div class="rt" @click="switchPayModal('open')">立即支付</div>
     </div>
@@ -69,31 +70,40 @@
                         <img src="../../assets/images/icon_zhifu_wx@2x.png" alt="">
                         <span>微信支付</span>
                     </div>
-                    <div class="rt checked"></div>
+                    <div :class="{'rt':true,'checked':formVal.payment_type == 2}"></div>
                 </div> -->
                 <div class="item ui acenter jbetween">
                     <div class="zfb lf ui">
                         <img src="../../assets/images/icon_zhifu_zfb@2x.png" alt="">
                         <span>支付宝支付</span>
                     </div>
-                    <div class="rt"></div>
+                    <div :class="{'rt':true,'checked':formVal.payment_type == 1}"></div>
                 </div>
             </div>
-            <div class="popupBoxPay">确认支付24元</div>
+            <div class="popupBoxPay" @click="confimPayOrder">确认支付{{orderLastPrice}}元</div>
         </div>
       </popup>
     </div>
     <div v-transfer-dom>
       <popup v-model="showCouponPopup" height="270px" is-transparent>
-        <div style="width: 95%;background-color:#fff;height:250px;margin:0 auto;border-radius:5px;padding-top:10px;">
-         <group>
-          <cell title="Product" value="Donate"></cell>
-          <cell title="Total" value="$10.24"></cell>
-         </group>
-         <div style="padding:20px 15px;">
-          <x-button type="primary">Pay</x-button>
-          <x-button @click.native="showCouponPopup = false">Cancel</x-button>
-         </div>
+        <div class="sub-coupon">
+          <div v-for="(item,index) in couponData" :key='index' :class="{
+            'coupon-item ui':true,
+            'overdue4':item.status==4,
+            'overdue2':item.status==2,
+            'overdue3':item.status==3,
+            'cur': item.id==formVal.coupon_id}" @click="handleCoupon(item)">
+            <div class="lf ui center">
+              <span class="price">{{item.discount}}</span>
+              <!-- <p class="desc ellitext">{{item.description}}</p> -->
+            </div>
+            <div class="rt">
+              <p class="name">{{item.description}}</p>
+              <p class="date">{{item.begin_at|formatDate}} - {{item.end_at|formatDate}}</p>
+              <p class='desc'>{{item.reason}}</p>
+            </div>
+            <icon class="couponCur" type="success"></icon>
+          </div>
         </div>
       </popup>
     </div>
@@ -107,7 +117,8 @@ import {
   PopupPicker,
   Popup,
   TransferDom,
-  XHeader
+  XHeader,
+  Icon
 } from "vux";
 import iconSearch from "@/assets/images/home_icon_search@2x.png";
 import iconPocket from "@/assets/images/recommend_btn_pocket@2x.png";
@@ -134,13 +145,25 @@ export default {
         couponCount: "",
         freight: "",
         list: "",
-        payType: { 1: "支付宝", 2: "微信" },
-        shippingType: { 1: "快递", 2: "送货上门" }
+        payType: null,
+        shippingType: null
       },
-      value1: [],
+      shippingTypeData: [["快递自取", "送货上门"]],
+      value1: ["快递自取"],
       showPopup: false,
       showCouponPopup: false,
-      row_id: []
+      couponData: [],
+      curCouponData: {},
+      orderPrice: "", // 商品金额
+      orderLastPrice: "", // 最终价格
+      formVal: {
+        address_id: "", // 地址
+        coupon_id: "", // 优惠券Id
+        row_id: [], // 商品Id
+        remark: "加辣特拉", //备注
+        payment_type: 1,
+        shipping_type: 1
+      }
     };
   },
   directives: {
@@ -152,21 +175,46 @@ export default {
     Popup,
     XHeader,
     Cell,
-    XButton
+    XButton,
+    Icon
   },
   filters: {
     formatMobile(val) {
       return val.slice(0, 3) + "****" + val.slice(7, 11);
+    },
+    formatDate(val) {
+      return val.slice(0, 10).replace(/-/g, ".");
     }
   },
   created() {
     // 初始页面数据
     let payGoods = cookie.get("payGoods");
     console.log(cookie.get("payGoods"));
-    this.row_id = payGoods && payGoods.split(",");
+    this.formVal.row_id = payGoods && payGoods.split(",");
     this.getPageData();
   },
   methods: {
+    // 确认支付
+    confimPayOrder() {
+      console.log(this.formVal);
+      this.$vux.loading.show();
+      $.post(`/api/orders`, this.formVal)
+        .then(res => {
+          console.log(res);
+          this.$vux.loading.hide();
+        })
+        .catch(() => {
+          this.$vux.loading.hide();
+        });
+    },
+    // 选择配送方式
+    handleShippingType(value) {
+      if (value == "快递自取") {
+        this.formVal.shipping_type = 1;
+      } else if (value == "送货上门") {
+        this.formVal.shipping_type = 2;
+      }
+    },
     getPageData() {
       //获取默认地址
       $.get("/api/addresses").then(response => {
@@ -176,12 +224,18 @@ export default {
           list.forEach(item => {
             if (item.is_default == 1) {
               this.defaultAddr = item;
+              this.formVal.address_id = item.id;
             }
           });
       });
       //商品列表
-      $.get("/api/carts/confirm", { row_id: this.row_id }).then(rs => {
+      $.get("/api/carts/confirm", { row_id: this.formVal.row_id }).then(rs => {
         this.pageData = rs.data;
+        this.totalPrice();
+      });
+      //我的优惠券列表
+      $.get("/api/coupons").then(response => {
+        this.couponData = response.data && response.data.list;
       });
     },
     // 打开支付弹框
@@ -193,6 +247,54 @@ export default {
         console.log("关闭");
         this.showPopup = false;
       }
+    },
+    // 选择购物券
+    handleCoupon(item) {
+      if (item.usable) {
+        if (item.id == this.formVal.coupon_id) {
+          this.formVal.coupon_id = "";
+          this.curCouponData = {};
+        } else {
+          this.formVal.coupon_id = item.id;
+          this.curCouponData = item;
+        }
+        this.showCouponPopup = false;
+        this.totalPrice();
+      }
+    },
+    // 计算总价
+    totalPrice() {
+      this.orderPrice = 0;
+      this.orderLastPrice = 0;
+      this.pageData &&
+        this.pageData.list &&
+        this.pageData.list.length &&
+        this.pageData.list.forEach(item => {
+          this.orderPrice =
+            (Number(this.orderPrice) * 100 +
+              Number(item.sale_price) * 100 * Number(item.qty)) /
+            100;
+        });
+      if (this.curCouponData.type == 1) {
+        // 满减
+        this.orderLastPrice =
+          (Number(this.orderPrice) * 100 -
+            Number(this.curCouponData.discount) * 100) /
+          100;
+      } else if (this.curCouponData.type == 2) {
+        // 折扣
+        this.orderLastPrice =
+          Number(this.curCouponData.discount) *
+          100 *
+          (Number(this.orderPrice) * 100) /
+          10000;
+      } else {
+        this.orderLastPrice = this.orderPrice;
+      }
+      this.orderLastPrice =
+        (Number(this.orderLastPrice) * 100 +
+          Number(this.pageData.freight) * 100) /
+        100;
     }
   }
 };
@@ -406,8 +508,12 @@ export default {
     margin: 0px 0 100px;
     background-color: #fff;
     box-sizing: border-box;
+    .cost-amount {
+      border-bottom: none;
+    }
     .cost-freight {
       border-bottom: none;
+      border-top: 1px solid #e0e0e0;
     }
   }
   .footer {
@@ -512,6 +618,104 @@ export default {
     font-size: 18px;
     font-weight: 400;
     text-align: center;
+  }
+}
+.sub-coupon {
+  background-color: #f5f6f7;
+  overflow: hidden;
+  min-height: 100%;
+  padding: 10px;
+  .coupon-item {
+    width: 100%;
+    height: 80px;
+    background: url("../../assets/images/coupon_bg_available@2x.png");
+    background-size: 100%;
+    margin-bottom: 10px;
+    overflow: hidden;
+    padding-right: 22px;
+    box-sizing: border-box;
+    position: relative;
+    &.overdue2 {
+      background: url("../../assets/images/coupon_bg_frozen@2x.png");
+      background-size: 100%;
+    }
+    &.overdue3 {
+      background: url("../../assets/images/coupon_bg_unavailable@2x.png");
+      background-size: 100%;
+    }
+    &.overdue4 {
+      background: url("../../assets/images/coupon_bg_overdue@2x.png");
+      background-size: 100%;
+    }
+    .lf {
+      width: 120px;
+      height: 100%;
+      flex-direction: column;
+      flex-shrink: 0;
+      .price {
+        font-weight: 400;
+        font-size: 30px;
+        color: #fff;
+
+        &::before {
+          content: "￥";
+          font-size: 15px;
+          font-weight: normal;
+        }
+      }
+
+      .desc {
+        font-size: 12px;
+        color: #fff;
+        margin-top: 2px;
+        padding-bottom: 3px;
+        max-width: 90%;
+      }
+    }
+    .rt {
+      // background-color: #fff;
+      overflow: hidden;
+      // flex: 1;
+      .name {
+        // width: 100%;
+        // height: 20px;
+        line-height: 20px;
+        color: #333333;
+        font-size: 15px;
+        margin: 5px 0 0 10px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+      }
+      .date {
+        width: 100%;
+        height: 16px;
+        line-height: 16px;
+        color: #999;
+        font-size: 12px;
+        margin: 4px 0 0 10px;
+      }
+      .desc {
+        width: 100%;
+        height: 16px;
+        line-height: 16px;
+        color: #666666;
+        font-size: 12px;
+        margin: 14px 0 0 10px;
+      }
+    }
+    .couponCur {
+      position: absolute;
+      right: 2px;
+      top: 50%;
+      margin-top: -12px;
+      display: none;
+    }
+    &.cur .couponCur {
+      display: block;
+    }
   }
 }
 </style>
