@@ -216,9 +216,13 @@ export default {
       }
     },
     getPageData() {
+      this.$vux.loading.show();
+      let addLoadOver = false;
+      let goodsLoadOver = false;
+      let couponLoadOver = false;
       //获取默认地址
-      $.get("/api/addresses").then(response => {
-        let list = response.data && response.data.list;
+      $.get("/api/addresses").then(rs => {
+        let list = rs.data && rs.data.list;
         list &&
           list.length !== 0 &&
           list.forEach(item => {
@@ -227,24 +231,31 @@ export default {
               this.formVal.address_id = item.id;
             }
           });
+        if (addLoadOver && goodsLoadOver && couponLoadOver) {
+          this.$vux.loading.hide();
+        }
       });
       //商品列表
       $.get("/api/carts/confirm", { row_id: this.formVal.row_id }).then(rs => {
         this.pageData = rs.data;
         this.totalPrice();
+        if (addLoadOver && goodsLoadOver && couponLoadOver) {
+          this.$vux.loading.hide();
+        }
       });
       //我的优惠券列表
-      $.get("/api/coupons").then(response => {
-        this.couponData = response.data && response.data.list;
+      $.get("/api/coupons/usable", { row_id: this.formVal.row_id }).then(rs => {
+        this.couponData = rs.data && rs.data.list;
+        if (addLoadOver && goodsLoadOver && couponLoadOver) {
+          this.$vux.loading.hide();
+        }
       });
     },
     // 打开支付弹框
     switchPayModal(type) {
       if (type == "open") {
-        console.log("打开");
         this.showPopup = true;
       } else if (type == "close") {
-        console.log("关闭");
         this.showPopup = false;
       }
     },

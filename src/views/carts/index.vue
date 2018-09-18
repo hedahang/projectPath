@@ -167,6 +167,7 @@ export default {
     },
     getPageData() {
       //购物车列表
+      this.$vux.loading.show();
       $.get("/api/carts").then(response => {
         this.goodsList = response.data && response.data.list;
         this.goodsList &&
@@ -179,6 +180,7 @@ export default {
               this.$set(item, "qty", item.qty);
             }
           });
+        this.$vux.loading.hide();
       });
     },
     changeEdit() {
