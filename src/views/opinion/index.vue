@@ -6,7 +6,7 @@
     <div class="opinion-title">
       <span>常见问题</span>
     </div>
-    <div class="opinion-list">
+    <div class="opinion-list" v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="20">
       <router-link to="/opinion/detail" class="opinion-item ui acenter jbetween">
         <div class="lf">图片无法加载</div>
         <div class="rt icon-right"></div>
@@ -29,11 +29,21 @@
 
 <script>
 import { XHeader, XInput, Group, Cell } from "vux";
+import { util, request as $, cookie } from "@/utils/index";
 export default {
   name: "opinion",
   data() {
     return {
-      pageTitle: "意见反馈"
+      pageTitle: "意见反馈",
+      listQuery: {
+        page: 1,
+        per_page: 10
+      },
+      firstAjax: true, // 首次加载
+      busy: false,
+      loadMoreOver: false, // 是否加载完所有
+      total: "", //总数量
+      pageData: []
     };
   },
   components: {
@@ -42,8 +52,39 @@ export default {
     Group,
     Cell
   },
-  created() {},
-  methods: {},
+  created() {
+    this.getPageData();
+  },
+  methods: {
+    loadMore() {
+      if (this.firstAjax) return;
+      this.busy = true;
+      //官方示例中延迟了1秒，防止滚动条滚动时的频繁请求数据
+      setTimeout(() => {
+        //这里请求接口去拿数据，实际应该是调用一个请求数据的方法
+        this.getGoodsList();
+      }, 1000);
+    },
+    getPageData() {
+      this.$vux.loading.show();
+      //首页商品列表
+      $.get(`/api/feedbacks`, this.listQuery).then(response => {
+        this.pageData = this.pageData.concat(response.data.data);
+        this.total = response.data.total;
+        this.firstAjax = false;
+
+        // 判断是否加载完成
+        if (this.listQuery.page * this.listQuery.per_page >= this.total) {
+          this.busy = true;
+          this.loadMoreOver = true;
+        } else {
+          this.listQuery.page = this.listQuery.page + 1;
+          this.busy = false;
+        }
+        this.$vux.loading.hide();
+      });
+    }
+  },
   computed: {
     getName: function() {
       return "zhangsww";
