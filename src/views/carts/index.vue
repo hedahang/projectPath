@@ -139,8 +139,9 @@ export default {
             row_id.push(item.row_id);
           }
         });
+        console.log(row_id);
       if (row_id && row_id.length !== 0) {
-        $.delete("/api/carts", row_id).then(rs => {
+        $.delete("/api/carts", {row_id}).then(rs => {
           this.getPageData();
         });
       }

@@ -30,11 +30,14 @@
 
 <script>
 import { XHeader, XInput, Group, Cell } from "vux";
+import { util, request as $, cookie } from "@/utils/index";
 export default {
   name: "opinion",
   data() {
     return {
-      pageTitle: "意见详情"
+      pageTitle: "意见详情",
+      id:"",
+      pageData:"",
     };
   },
   components: {
@@ -43,13 +46,21 @@ export default {
     Group,
     Cell
   },
-  created() {},
-  methods: {},
-  computed: {
-    getName: function() {
-      return "zhangsww";
+  created() {
+    this.id = this.$route.query.id;
+    this.getPageData()
+  },
+  methods: {
+    getPageData(){
+      if(!this.id)return;
+      this.$vux.loading.show();
+      $.get("/api/feedbacks/"+this.id).then(res => {
+        console.log(res)
+        this.pageData = res.data;
+        this.$vux.loading.hide();
+      });
     }
-  }
+  },
 };
 </script>
 

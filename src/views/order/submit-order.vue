@@ -47,7 +47,7 @@
       </div>
       <div class="cost-freight row ui acenter jbetween">
         <div class="lf">运费</div>
-        <div class="rt red">￥{{pageData.freight}}</div>
+        <div class="rt red">￥{{freight}}</div>
       </div>
     </div>
     <div class="footer ui acenter jbetween">
@@ -141,9 +141,9 @@ export default {
         detailed_address: "",
         is_default: 1
       },
+      freight: "", //运费
       pageData: {
         couponCount: "",
-        freight: "",
         list: "",
         payType: null,
         shippingType: null
@@ -201,6 +201,7 @@ export default {
       $.post(`/api/orders`, this.formVal)
         .then(res => {
           console.log(res);
+          window.location.href = res.data.redirect_url;
           this.$vux.loading.hide();
         })
         .catch(() => {
@@ -220,6 +221,7 @@ export default {
       let addLoadOver = false;
       let goodsLoadOver = false;
       let couponLoadOver = false;
+      let freightLoadOver = false;
       //获取默认地址
       $.get("/api/addresses").then(rs => {
         let list = rs.data && rs.data.list;
@@ -231,7 +233,8 @@ export default {
               this.formVal.address_id = item.id;
             }
           });
-        if (addLoadOver && goodsLoadOver && couponLoadOver) {
+        addLoadOver = true;
+        if (addLoadOver && goodsLoadOver && couponLoadOver && freightLoadOver) {
           this.$vux.loading.hide();
         }
       });
@@ -239,14 +242,27 @@ export default {
       $.get("/api/carts/confirm", { row_id: this.formVal.row_id }).then(rs => {
         this.pageData = rs.data;
         this.totalPrice();
-        if (addLoadOver && goodsLoadOver && couponLoadOver) {
+        goodsLoadOver = true;
+        if (addLoadOver && goodsLoadOver && couponLoadOver && freightLoadOver) {
           this.$vux.loading.hide();
         }
       });
       //我的优惠券列表
       $.get("/api/coupons/usable", { row_id: this.formVal.row_id }).then(rs => {
         this.couponData = rs.data && rs.data.list;
-        if (addLoadOver && goodsLoadOver && couponLoadOver) {
+        couponLoadOver = true;
+        if (addLoadOver && goodsLoadOver && couponLoadOver && freightLoadOver) {
+          this.$vux.loading.hide();
+        }
+      });
+      //运费
+      $.get("/api/order/freight", {
+        row_id: this.formVal.row_id,
+        shipping_type: 1
+      }).then(rs => {
+        this.freight = rs.data && rs.data.freight;
+        freightLoadOver = true;
+        if (addLoadOver && goodsLoadOver && couponLoadOver && freightLoadOver) {
           this.$vux.loading.hide();
         }
       });
@@ -303,9 +319,7 @@ export default {
         this.orderLastPrice = this.orderPrice;
       }
       this.orderLastPrice =
-        (Number(this.orderLastPrice) * 100 +
-          Number(this.pageData.freight) * 100) /
-        100;
+        (Number(this.orderLastPrice) * 100 + Number(this.freight) * 100) / 100;
     }
   }
 };

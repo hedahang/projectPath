@@ -7,16 +7,8 @@
       <span>常见问题</span>
     </div>
     <div class="opinion-list" v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="20">
-      <router-link to="/opinion/detail" class="opinion-item ui acenter jbetween">
-        <div class="lf">图片无法加载</div>
-        <div class="rt icon-right"></div>
-      </router-link>
-      <router-link to="/opinion/detail" class="opinion-item ui acenter jbetween">
-        <div class="lf">积分如何获取</div>
-        <div class="rt icon-right"></div>
-      </router-link>
-      <router-link to="/opinion/detail" class="opinion-item ui acenter jbetween">
-        <div class="lf">昵称无法更改</div>
+      <router-link v-for="(item,index) in pageData" :key="index" :to="{path:'/opinion/detail',query:{id:item.id}}" class="opinion-item ui acenter jbetween">
+        <div class="lf">{{item.name}}</div>
         <div class="rt icon-right"></div>
       </router-link>
     </div>
@@ -62,7 +54,7 @@ export default {
       //官方示例中延迟了1秒，防止滚动条滚动时的频繁请求数据
       setTimeout(() => {
         //这里请求接口去拿数据，实际应该是调用一个请求数据的方法
-        this.getGoodsList();
+        this.getPageData();
       }, 1000);
     },
     getPageData() {
