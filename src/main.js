@@ -20,6 +20,17 @@ FastClick.attach(document.body)
 
 Vue.config.productionTip = false
 
+router.beforeEach((to, from, next) => {
+    /* 路由发生变化修改页面title */
+    if (to.meta.title) {
+        document.title = to.meta.title
+    }
+    if (Vue.$vux.loading.isVisible()) {
+        Vue.$vux.loading.hide();
+    }
+    next()
+})
+
 /* eslint-disable no-new */
 new Vue({
     router,

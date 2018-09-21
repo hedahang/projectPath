@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import axios from 'axios'
-import store from '@/store'
+import router from '@/router'
 import { util, cookie } from "@/utils/index";
 
 // 创建axios实例
@@ -35,6 +35,12 @@ service.interceptors.response.use(
          */
         const rs = response.data;
         if (!rs.status) {
+            // 40001 过期了;
+            if (rs.code == 40001) {
+                router.push("/login")
+                return Promise.reject('error');
+            }
+
             // 业务错误
             erroMsg = rs.message;
             if (!hasErroMsg) {
