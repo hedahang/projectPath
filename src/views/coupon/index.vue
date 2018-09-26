@@ -104,7 +104,7 @@ export default {
       }
 
       .lf {
-        width: 120px;
+        width: 34%;
         height: 100%;
         flex-direction: column;
         flex-shrink: 0;

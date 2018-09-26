@@ -11,7 +11,7 @@
     </div>
     <!-- 订单商品列表 -->
     <div class="goods-box">
-      <div class="goods-list">
+      <div class="goods-list-order">
         <template v-for="(item,index) in goodsList">
           <div v-if='item.count==1&&(status==0||status==item.status)' :key='index' class="goods-list-item">
             <div class="item-top">
@@ -202,7 +202,7 @@ export default {
     height: 100%;
     display: flex; // background-color: #fff;
     margin-top: 10px;
-    .goods-list {
+    .goods-list-order {
       width: 100%;
       .goods-list-item {
         display: flex;
