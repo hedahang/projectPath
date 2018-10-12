@@ -8,6 +8,7 @@
         <img v-if="type==1" src="../../assets/images/success@2x.png" alt="">
         <img v-if="type==2" src="../../assets/images/fail@2x.png" alt="">
         <span>{{pageTitle}}</span>
+        <span v-if="type==2" style="line-height:20px">{{failReason}}</span>
       </div>
       <div class="btn ui center">
         <router-link v-if="type==1" class="item" :to="{ name: 'order'}">查看订单</router-link>
@@ -30,19 +31,21 @@ export default {
     return {
       pageTitle: "支付成功",
       type: 1, // 支付结果1：成功;2：失败
-      orderId: "" // 订单id
+      orderId: "", // 订单id
+      failReason:""
     };
   },
   components: {
     XHeader
   },
   created() {
-    let { type } = this.$route.query;
+    let { type,failReason } = this.$route.query;
     this.type = type || 1;
     if (this.type == 1) {
       this.pageTitle = "支付成功";
     } else {
       this.pageTitle = "支付失败";
+      this.failReason = failReason
     }
     // this.getPageData();
   },
