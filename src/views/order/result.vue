@@ -13,7 +13,7 @@
       <div class="btn ui center">
         <router-link v-if="type==1" class="item" :to="{ name: 'order'}">查看订单</router-link>
         <router-link v-if="type==1" class="item" to="/home">返回首页</router-link>
-        <router-link v-if="type==2" class="item" to="/home">重新支付</router-link>
+        <span v-if="type==2" class="item" @click="toAgainPay">重新支付</span>
       </div>
     </div>
   </div>
@@ -32,24 +32,34 @@ export default {
       pageTitle: "支付成功",
       type: 1, // 支付结果1：成功;2：失败
       orderId: "", // 订单id
-      failReason:""
+      failReason:"",
+      redirect_url:''
     };
   },
   components: {
     XHeader
   },
   created() {
-    let { type,failReason } = this.$route.query;
+    let { type,failReason,redirect_url } = this.$route.query;
     this.type = type || 1;
     if (this.type == 1) {
       this.pageTitle = "支付成功";
     } else {
       this.pageTitle = "支付失败";
       this.failReason = failReason
+      this.redirect_url = redirect_url&&window.atob(redirect_url)
     }
-    // this.getPageData();
   },
-  methods: {}
+  methods: {
+    // 重新支付
+    toAgainPay(){
+      if(!!this.redirect_url){
+        window.location.href = this.redirect_url;
+      }else{
+        this.$vux.toast.text("请刷新重试", "middle");
+      }
+    }
+  }
 };
 </script>
 
