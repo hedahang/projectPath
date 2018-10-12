@@ -10,6 +10,7 @@ import Goods from '@/views/goods/detail'
 import SubmitOrder from '@/views/order/submit-order'
 import Order from '@/views/order/index'
 import OrderDetail from '@/views/order/detail'
+import PayResult from '@/views/order/result'
 import Carts from '@/views/carts/index'
 import My from '@/views/my/index'
 import Setting from '@/views/setting/index'
@@ -73,6 +74,11 @@ export default new Router({
             path: '/orderDetail',
             component: OrderDetail,
             name: 'orderDetail',
+        },
+        {
+            path: '/result',
+            component: PayResult,
+            name: 'payResult',
         },
         {
             path: '/carts',

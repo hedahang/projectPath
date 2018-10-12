@@ -1,6 +1,6 @@
 <template>
   <div class="my-order container">
-    <x-header class="home-header header-bar" :left-options="{backText: ''}" :title="pageTitle" style="background-color:#FF5151;">
+    <x-header class="home-header header-bar" @on-click-back="goToMy" :left-options="{backText: '',preventGoBack:true}" :title="pageTitle" style="background-color:#FF5151;">
     </x-header>
     <!-- 订单分类 -->
     <div class="order-nav">
@@ -145,6 +145,10 @@ export default {
     this.getPageData();
   },
   methods: {
+    // 返回我的首页
+    goToMy(){
+      this.$router.push('/my')
+    },
     getPageData() {
       this.$vux.loading.show();
       //我的商品列表
