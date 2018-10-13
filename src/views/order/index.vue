@@ -16,7 +16,7 @@
           <div v-if='item.count==1&&(status==0||status==item.status)' :key='index' class="goods-list-item">
             <div class="item-top">
               <div class="item-lf">
-                <img :src="item.image&&item.image[0]" alt="">
+                <img :src="item.images&&item.images[0]" alt="">
               </div>
               <div class="item-rt">
                 <h4 class="item-rt_title ui jbetween">
@@ -40,7 +40,7 @@
             <div class="item-center">
               <ul class='item-center-ul'>
                 <li v-for="(itm,idx) in item.items" :key='idx'>
-                  <img :src="itm.image&&itm.image" alt="">
+                  <img :src="itm.image" alt="">
                 </li>
               </ul>
               <div class="item-center-price">
@@ -92,7 +92,7 @@ export default {
       edit: false,
       goodsList: [
         {
-          image: [
+          images: [
             "http://cdn.bookround.com/3697687492166beddcb63cfb29ed92d4.jpg"
           ],
           name: "薯片",
@@ -102,7 +102,7 @@ export default {
           id:7
         },
         {
-          image: [
+          images: [
             "http://cdn.bookround.com/3697687492166beddcb63cfb29ed92d4.jpg"
           ],
           name: "薯片",

@@ -32,7 +32,7 @@
             </a>
             <div class="shop-price">￥{{getGoodsNum.price}}</div>
         </div>
-        <a class="shop-rt" href="#/submitOrder">结算</a>
+        <a class="shop-rt" href="#/carts">结算</a>
     </div>
   </div>
 </template>
