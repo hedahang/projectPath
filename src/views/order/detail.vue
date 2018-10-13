@@ -24,7 +24,7 @@
     <div class="goods-list">
         <div class="goods-item" v-for="(item,index) in data.items" :key='index'>
           <div class="item-lf">
-            <img :src="item.iamge" alt="">
+            <img :src="item.image" alt="">
           </div>
           <div class="item-rt">
             <h4 class="item-rt_title">{{item.goods_name}}</h4>
