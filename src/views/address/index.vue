@@ -1,5 +1,5 @@
 <template>
-  <div class="my-address container">
+  <div class="my-address container" :style="{'minHeight':minHeight+'px'}">
     <x-header class="home-header header-bar" :left-options="{backText: ''}" :title="pageTitle" style="background-color:#FF5151;">
     </x-header>
     <div class="address-list">
@@ -39,7 +39,8 @@ export default {
   data() {
     return {
       pageTitle: "收货地址",
-      list: []
+      list: [],
+      minHeight:400
     };
   },
   components: {
@@ -51,6 +52,7 @@ export default {
     }
   },
   created() {
+    this.minHeight = window.innerHeight - 140
     this.getPageData();
   },
   methods: {

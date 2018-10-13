@@ -1,5 +1,5 @@
 <template>
-  <div class="my-setting-feedback container">
+  <div class="my-setting-feedback container" :style="{'minHeight':minHeight+'px'}">
     <x-header class="home-header header-bar" :left-options="{backText: ''}" :title="pageTitle" style="background-color:#FF5151;">
     </x-header>
     <!-- 意见反馈 -->
@@ -53,7 +53,8 @@ export default {
       imgList: [],
       subImgList: [],
       maxCount: 9,
-      pageData: null
+      pageData: null,
+      minHeight: ""
     };
   },
   components: {
@@ -65,7 +66,9 @@ export default {
     VueCoreImageUpload,
     Icon
   },
-  created() {},
+  created() {
+    this.minHeight = window.innerHeight - 140;
+  },
   methods: {
     submitFeedBack() {
       if (!this.temp.name) {

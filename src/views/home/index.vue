@@ -1,5 +1,5 @@
 <template>
-  <div class="home container">
+  <div class="home container" :style="{'minHeight':minHeight+'px'}">
     <x-header class="home-header" :left-options="{showBack: false}" title="slot:overwrite-title" style="background-color:#FF5151;">
       <div class="overwrite-title-demo" slot="overwrite-title" @click="toSearch" >
         <group gutter='0'>
@@ -62,6 +62,7 @@ export default {
       busy: false,
       loadMoreOver: false, // 是否加载完所有
       total:"",//总数量
+      minHeight:'200'
     };
   },
   components: {
@@ -81,6 +82,7 @@ export default {
   },
   computed: {},
   created() {
+    this.minHeight = window.innerHeight - 96
     this.getPageData();
     this.getGoodsList();
   },

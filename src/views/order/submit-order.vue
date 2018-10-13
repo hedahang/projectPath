@@ -1,5 +1,5 @@
 <template>
-  <div class="submit-order">
+  <div class="submit-order" :style="{'minHeight':minHeight+'px'}">
     <x-header class="home-header header-bar" :left-options="{backText: ''}" title="确认订单" style="background-color:#FF5151;">
     </x-header>
     <router-link class="userInfo ui acenter" to="/address">
@@ -163,7 +163,8 @@ export default {
         remark: "加辣特拉", //备注
         payment_type: 1,
         shipping_type: 1
-      }
+      },
+      minHeight:400
     };
   },
   directives: {
@@ -188,6 +189,7 @@ export default {
   },
   created() {
     // 初始页面数据
+    this.minHeight = window.innerHeight - 96
     let payGoods = cookie.get("payGoods");
     console.log(cookie.get("payGoods"));
     this.formVal.row_id = payGoods && payGoods.split(",");
@@ -262,6 +264,7 @@ export default {
       }).then(rs => {
         this.freight = rs.data && rs.data.freight;
         freightLoadOver = true;
+        this.totalPrice();
         if (addLoadOver && goodsLoadOver && couponLoadOver && freightLoadOver) {
           this.$vux.loading.hide();
         }

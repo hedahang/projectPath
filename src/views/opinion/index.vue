@@ -1,5 +1,5 @@
 <template>
-  <div class="my-setting-opinion container">
+  <div class="my-setting-opinion container" :style="{'minHeight':minHeight+'px'}">
     <x-header class="home-header header-bar" :left-options="{backText: ''}" :title="pageTitle" style="background-color:#FF5151;">
     </x-header>
     <!-- 常见问题 -->
@@ -35,7 +35,8 @@ export default {
       busy: false,
       loadMoreOver: false, // 是否加载完所有
       total: "", //总数量
-      pageData: []
+      pageData: [],
+      minHeight:''
     };
   },
   components: {
@@ -45,6 +46,7 @@ export default {
     Cell
   },
   created() {
+    this.minHeight = window.innerHeight - 140
     this.getPageData();
   },
   methods: {

@@ -83,23 +83,23 @@ export default {
     .coupon-item {
       width: 100%;
       height: 80px;
-      background: url("../../assets/images/coupon_bg_available@2x.png");
+      background: url("../../assets/images/coupon_bg_available@2x.png") no-repeat 0 0;
       background-size: 100%;
       margin-bottom: 10px;
       overflow: hidden;
 
       &.overdue2 {
-        background: url("../../assets/images/coupon_bg_frozen@2x.png");
+        background: url("../../assets/images/coupon_bg_frozen@2x.png") no-repeat 0 0;
         background-size: 100%;
       }
 
       &.overdue3 {
-        background: url("../../assets/images/coupon_bg_unavailable@2x.png");
+        background: url("../../assets/images/coupon_bg_unavailable@2x.png") no-repeat 0 0;
         background-size: 100%;
       }
 
       &.overdue4 {
-        background: url("../../assets/images/coupon_bg_overdue@2x.png");
+        background: url("../../assets/images/coupon_bg_overdue@2x.png") no-repeat 0 0;
         background-size: 100%;
       }
 

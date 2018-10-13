@@ -1,5 +1,5 @@
 <template>
-  <div class="detail container">
+  <div class="detail container" :style="{'minHeight':minHeight+'px'}">
     <x-header class="home-header header-bar" :left-options="{backText: ''}" title="商品详情" style="background-color:#FF5151;">
     </x-header>
     <!-- 轮播 -->
@@ -57,11 +57,12 @@ export default {
         name: "",
         description: "",
         image: [],
-        sale_price: "1",
+        sale_price: "",
         sales: 0,
         keyword: "",
         qty: 0
-      }
+      },
+      minHeight:400
     };
   },
   components: {
@@ -72,6 +73,7 @@ export default {
     Badge
   },
   created() {
+    this.minHeight = window.innerHeight - 96
     // 分类id
     let { id } = this.$route.query;
     this.goodsId = id;

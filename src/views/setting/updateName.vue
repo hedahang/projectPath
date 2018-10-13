@@ -1,5 +1,5 @@
 <template>
-  <div class="my-setting-updateName container">
+  <div class="my-setting-updateName container" :style="{'minHeight':minHeight+'px'}">
     <x-header class="home-header header-bar" :left-options="{backText: ''}" :title="pageTitle" style="background-color:#FF5151;">
     </x-header>
     <!-- 列表 -->
@@ -27,7 +27,8 @@ export default {
   data() {
     return {
       pageTitle: "修改昵称",
-      username: ""
+      username: "",
+      minHeight:''
     };
   },
   components: {
@@ -37,6 +38,7 @@ export default {
     Cell
   },
   created() {
+    this.minHeight = window.innerHeight - 140
     this.username = cookie.get('windice_username');
   },
   methods: {

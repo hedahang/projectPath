@@ -1,5 +1,5 @@
 <template>
-  <div class="carts container">
+  <div class="carts container" :style="{'minHeight':minHeight+'px'}">
     <x-header class="home-header header-bar" :left-options="{showBack: false}" :title="pageTitle" style="background-color:#FF5151;">
       <span @click="changeEdit" style="font-size: 15px;color: #ffffff;" slot="right">{{headerRight}}</span>
     </x-header>
@@ -63,7 +63,8 @@ export default {
       edit: false,
       allPrice: 0,
       isAllChecked: false, // 是否全选
-      goodsList: []
+      goodsList: [],
+      minHeight: '400'
     };
   },
   components: {
@@ -82,6 +83,7 @@ export default {
     goodsListC
   },
   created() {
+    this.minHeight = window.innerHeight - 140
     this.getPageData();
   },
   methods: {
@@ -204,6 +206,7 @@ export default {
 <style rel="stylesheet/less" lang="less">
 .carts {
   padding: 46px 0 94px;
+  min-height: 527px;
   .home-header {
     position: fixed;
     width: 100%;

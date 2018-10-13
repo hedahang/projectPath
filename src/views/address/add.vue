@@ -1,5 +1,5 @@
 <template>
-  <div class="my-addAddress container">
+  <div class="my-addAddress container" :style="{'minHeight':minHeight+'px'}">
     <x-header class="home-header header-bar" :left-options="{backText: ''}" :title="pageTitle" style="background-color:#FF5151;">
     </x-header>
     <div class="addAddress-list">
@@ -62,7 +62,8 @@ export default {
         area_id: "",
         area_name: "",
         detailed_address: ""
-      }
+      },
+      minHeight:400
     };
   },
   components: {
@@ -73,6 +74,7 @@ export default {
     XAddress
   },
   created() {
+    this.minHeight = window.innerHeight - 140
     let id = this.$route.query.id;
     this.editId = id;
     if (!!this.editId) {

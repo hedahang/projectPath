@@ -1,5 +1,5 @@
 <template>
-  <div class="my container">
+  <div class="my container" :style="{'minHeight':minHeight+'px'}">
     <header class="ui jcenter">
       <div class="my-header ui acenter">
         <router-link v-if="!userId" to="/login" class="row ui acenter jbetween" style='flex-direction: column;'>
@@ -92,7 +92,8 @@ export default {
           sale_price: "8",
           qty: 999
         }
-      ]
+      ],
+      minHeight:400
     };
   },
   components: {
@@ -111,7 +112,7 @@ export default {
     goodsListC
   },
   created() {
-    console.log(this.$store);
+    this.minHeight = window.innerHeight - 50
     // 获取用户信息
     this.getUserInfo();
   },
