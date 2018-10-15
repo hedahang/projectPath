@@ -30,7 +30,7 @@
             </div>
             <div class="item-bottom">
               <router-link class="look-detail" :to="{ name: 'orderDetail', query: { orderId: item.id }}">查看详情</router-link>
-              <div class="pay">立即支付</div>
+              <div class="pay" v-if="item.status == 1" @click="toPay(item)">立即支付</div>
             </div>
           </div>
           <div v-if='item.count!=1&&(status==0||status==item.status)' :key='index' class="goods-list-item not-only">
@@ -54,7 +54,7 @@
             </div>
             <div class="item-bottom">
               <router-link class="look-detail" :to="{ name: 'orderDetail', query: { orderId: item.id }}">查看详情</router-link>
-              <div class="pay">立即支付</div>
+              <div class="pay" v-if="item.status == 1" @click="toPay(item)">立即支付</div>
             </div>
           </div>
         </template>
@@ -145,6 +145,10 @@ export default {
     this.getPageData();
   },
   methods: {
+    // 去支付
+    toPay(item){
+      window.location.href = item.redirect_url;
+    },
     // 返回我的首页
     goToMy(){
       this.$router.push('/my')
